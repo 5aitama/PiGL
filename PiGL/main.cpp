@@ -18,6 +18,9 @@
 #include "WInfos.hpp"
 #include "ShaderCompiler.hpp"
 
+// Test include GLM on raspi
+#include <glm/vec3.hpp>
+
 #ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
 #endif
