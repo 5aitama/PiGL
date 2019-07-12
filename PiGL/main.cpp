@@ -135,6 +135,8 @@ int main(int argc, const char * argv[]) {
     float last_time     = static_cast<float>(glfwGetTime());
     float delta_time    = 0.0f;
     
+    float total_delta = 0.f;
+    uint fps = 0;
     /* Loop */
     while(!glfwWindowShouldClose(window)) {
         
@@ -142,6 +144,14 @@ int main(int argc, const char * argv[]) {
         delta_time      = current_time - last_time;
         last_time       = current_time;
         
+        total_delta += delta_time;
+        if(total_delta >= 1.0f) {
+            std::cout << fps << "fps" << std::endl;
+            fps = 0;
+            total_delta -= 1.0f;
+        } else {
+            fps++;
+        }
         // std::cout << delta_time << std::endl;
         
         /* Clear with white color... */
