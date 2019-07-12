@@ -16,6 +16,10 @@
     #define GLM_FORCE_LEFT_HANDED
 #endif
 
+#ifndef BUFFER_OFFSET
+#define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
+#endif
+
 #ifdef __arm__
     #define CONTEXT_MAJOR 3
     #define CONTEXT_MINOR 3
