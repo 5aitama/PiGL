@@ -8,18 +8,12 @@
 
 #define GL_SILENCE_DEPRECATION
 
-#include <iostream>
-#include <GL/glew.h>
-#ifdef __APPLE__
-#include <OpenGL/gl3.h>
-#endif
-#include <GLFW/glfw3.h>
-
-#include "WInfos.hpp"
-#include "ShaderCompiler.hpp"
-
 #ifndef BUFFER_OFFSET
-#define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
+    #define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
+#endif
+
+#ifndef GLM_FORCE_LEFT_HANDED
+    #define GLM_FORCE_LEFT_HANDED
 #endif
 
 #ifdef __arm__
@@ -29,6 +23,21 @@
     #define CONTEXT_MAJOR 4
     #define CONTEXT_MINOR 1
 #endif
+
+#include <iostream>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#ifdef __APPLE__
+    #include <OpenGL/gl3.h>
+#endif
+
+#include <GLFW/glfw3.h>
+
+#include "WInfos.hpp"
+#include "ShaderCompiler.hpp"
 
 int main(int argc, const char * argv[]) {
     
@@ -66,6 +75,10 @@ int main(int argc, const char * argv[]) {
     /* Init GLEW */
     glewInit();
     
+    glViewport(0, 0, winfos.width, winfos.height);
+    glFrontFace(GL_CW);
+    glCullFace(GL_FRONT);
+    
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     ShaderCompiler shader("Shaders/basic.vertex",
@@ -75,9 +88,9 @@ int main(int argc, const char * argv[]) {
     std::cout << "Shader is compiled ? " << shader.IsCompiled() << std::endl;
     
     float verts[9] = {
-        -1.0f, -1.0f, 0.0f,
-         0.0f,  1.0f, 0.0f,
-         1.0f, -1.0f, 0.0f
+        -1.0f, -1.0f,  0.0f,
+         0.0f, 1.0f,  0.0f,
+         1.0f, -1.0f,  0.0f
     };
     
     float colors[9] = {
@@ -108,6 +121,13 @@ int main(int argc, const char * argv[]) {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     
+    
+    glm::mat4 projection = glm::perspective(45.0f, static_cast<float>(winfos.width) / static_cast<float>(winfos.height), 0.1f, 100.0f);
+    glm::mat4 view(1.0f);
+    glm::mat4 model(1.0f);
+    
+    view = glm::lookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    
     /* Loop */
     while(!glfwWindowShouldClose(window)) {
         
@@ -120,6 +140,9 @@ int main(int argc, const char * argv[]) {
         /* Use shader */
         glUseProgram(shader.GetProgramID());
             glBindVertexArray(vaoID);
+                glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
+                glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "V"), 1, GL_FALSE, glm::value_ptr(view));
+                glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "P"), 1, GL_FALSE, glm::value_ptr(projection));
                 glDrawArrays(GL_TRIANGLES, 0, 3);
             glBindVertexArray(0);
         glUseProgram(0);
