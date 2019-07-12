@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		D96E4E4422D7E2C000149D88 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96E4E4322D7E2C000149D88 /* main.cpp */; };
+		D96E4E4C22D7E2E200149D88 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96E4E4B22D7E2E100149D88 /* OpenGL.framework */; };
+		D96E4E4E22D7E2F400149D88 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D96E4E4D22D7E2F400149D88 /* libGLEW.2.1.0.dylib */; };
+		D96E4E5022D7E30200149D88 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D96E4E4F22D7E30200149D88 /* libglfw.3.3.dylib */; };
+		D96E4E5322D7E99A00149D88 /* WInfos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D96E4E5222D7E99A00149D88 /* WInfos.cpp */; };
+		D96E4E5522D7EC3500149D88 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = D96E4E5422D7EC3500149D88 /* Makefile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +30,12 @@
 /* Begin PBXFileReference section */
 		D96E4E4022D7E2C000149D88 /* PiGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PiGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		D96E4E4322D7E2C000149D88 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D96E4E4B22D7E2E100149D88 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		D96E4E4D22D7E2F400149D88 /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../usr/local/Cellar/glew/2.1.0/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
+		D96E4E4F22D7E30200149D88 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../usr/local/Cellar/glfw/3.3/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
+		D96E4E5122D7E7F600149D88 /* WInfos.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WInfos.hpp; sourceTree = "<group>"; };
+		D96E4E5222D7E99A00149D88 /* WInfos.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WInfos.cpp; sourceTree = "<group>"; };
+		D96E4E5422D7EC3500149D88 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +43,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D96E4E5022D7E30200149D88 /* libglfw.3.3.dylib in Frameworks */,
+				D96E4E4E22D7E2F400149D88 /* libGLEW.2.1.0.dylib in Frameworks */,
+				D96E4E4C22D7E2E200149D88 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +57,7 @@
 			children = (
 				D96E4E4222D7E2C000149D88 /* PiGL */,
 				D96E4E4122D7E2C000149D88 /* Products */,
+				D96E4E4A22D7E2E100149D88 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,8 +73,21 @@
 			isa = PBXGroup;
 			children = (
 				D96E4E4322D7E2C000149D88 /* main.cpp */,
+				D96E4E5122D7E7F600149D88 /* WInfos.hpp */,
+				D96E4E5222D7E99A00149D88 /* WInfos.cpp */,
+				D96E4E5422D7EC3500149D88 /* Makefile */,
 			);
 			path = PiGL;
+			sourceTree = "<group>";
+		};
+		D96E4E4A22D7E2E100149D88 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D96E4E4F22D7E30200149D88 /* libglfw.3.3.dylib */,
+				D96E4E4D22D7E2F400149D88 /* libGLEW.2.1.0.dylib */,
+				D96E4E4B22D7E2E100149D88 /* OpenGL.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,7 +146,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D96E4E5522D7EC3500149D88 /* Makefile in Sources */,
 				D96E4E4422D7E2C000149D88 /* main.cpp in Sources */,
+				D96E4E5322D7E99A00149D88 /* WInfos.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +270,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/glm/0.9.9.5/include,
+					/usr/local/Cellar/glfw/3.3/include,
+					/usr/local/Cellar/glew/2.1.0/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glew/2.1.0/lib,
+					/usr/local/Cellar/glfw/3.3/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -248,6 +288,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/Cellar/glm/0.9.9.5/include,
+					/usr/local/Cellar/glfw/3.3/include,
+					/usr/local/Cellar/glew/2.1.0/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glew/2.1.0/lib,
+					/usr/local/Cellar/glfw/3.3/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
