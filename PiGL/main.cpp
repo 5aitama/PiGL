@@ -38,10 +38,10 @@ int main(int argc, const char * argv[]) {
     glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, winfos.context_version_minor);
     
     /* For Mac OS only? */
-    #ifndef __arm__
+    // #ifndef __arm__
         glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    #endif
+    //#endif
     
     /* Create window */
     GLFWwindow* window = glfwCreateWindow(winfos.width, winfos.height, winfos.title.c_str(), NULL, NULL);
@@ -59,10 +59,12 @@ int main(int argc, const char * argv[]) {
     /* Init GLEW */
     glewInit();
     
+    std::cout << glGetString(GL_VERSION) << std::endl;
+
     // ‎⁨Mac OS⁩ ▸ ⁨Users⁩ ▸ ⁨alexsb⁩ ▸ ⁨Desktop⁩ ▸ ⁨QLib⁩ ▸ ⁨QLib⁩ ▸ ⁨Shader⁩
     ShaderCompiler shader("/Users/alexsb/Desktop/QLib/QLib/Shader/basic.vertex",
                           "/Users/alexsb/Desktop/QLib/QLib/Shader/basic.fragment");
-    shader.Compile();
+    // shader.Compile();
     
     std::cout << "Shader is compiled ? " << shader.IsCompiled() << std::endl;
     
