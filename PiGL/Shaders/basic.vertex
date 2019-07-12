@@ -1,0 +1,11 @@
+# version 330
+
+layout(location = 0) in vec3 in_vert;
+layout(location = 1) in vec3 in_color;
+
+out vec4 o_color;
+
+void main() {
+    o_color = vec4(in_color, 1.0);
+    gl_Position = vec4(in_vert, 1.0);
+}

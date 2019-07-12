@@ -10,10 +10,17 @@
 
 #include <iostream>
 #include <GL/glew.h>
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#endif
 #include <GLFW/glfw3.h>
 
 #include "WInfos.hpp"
 #include "ShaderCompiler.hpp"
+
+#ifndef BUFFER_OFFSET
+#define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
+#endif
 
 #ifdef __arm__
     #define CONTEXT_MAJOR 3
@@ -61,12 +68,45 @@ int main(int argc, const char * argv[]) {
     
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    // ‎⁨Mac OS⁩ ▸ ⁨Users⁩ ▸ ⁨alexsb⁩ ▸ ⁨Desktop⁩ ▸ ⁨QLib⁩ ▸ ⁨QLib⁩ ▸ ⁨Shader⁩
-    ShaderCompiler shader("/Users/alexsb/Desktop/QLib/QLib/Shader/basic.vertex",
-                          "/Users/alexsb/Desktop/QLib/QLib/Shader/basic.fragment");
-    // shader.Compile();
+    ShaderCompiler shader("Shaders/basic.vertex",
+                          "Shaders/basic.fragment");
+    shader.Compile();
     
     std::cout << "Shader is compiled ? " << shader.IsCompiled() << std::endl;
+    
+    float verts[9] = {
+        -1.0f, -1.0f, 0.0f,
+         0.0f,  1.0f, 0.0f,
+         1.0f, -1.0f, 0.0f
+    };
+    
+    float colors[9] = {
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f
+    };
+    
+    GLuint vboID;
+    glGenBuffers(1, &vboID);
+    glBindBuffer(GL_ARRAY_BUFFER, vboID);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 9 * 2, 0, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 9, verts);
+        glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 9, sizeof(float) * 9, colors);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+    GLuint vaoID;
+    glGenVertexArrays(1, &vaoID);
+    glBindVertexArray(vaoID);
+        glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+            glEnableVertexAttribArray(0);
+    
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(float) * 9));
+            glEnableVertexAttribArray(1);
+    
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
     
     /* Loop */
     while(!glfwWindowShouldClose(window)) {
@@ -77,11 +117,32 @@ int main(int argc, const char * argv[]) {
         /* Clear sreen */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        /* Use shader */
+        glUseProgram(shader.GetProgramID());
+            glBindVertexArray(vaoID);
+                glDrawArrays(GL_TRIANGLES, 0, 3);
+            glBindVertexArray(0);
+        glUseProgram(0);
+        
         /* Pool events */
         glfwPollEvents();
         
         /* Swap buffers */
         glfwSwapBuffers(window);
+    }
+    
+    /* Delete vao! */
+    if(glIsVertexArray(vaoID) == GL_TRUE) {
+        std::cout << "Delete vertex array object..." << std::endl;
+        glDeleteVertexArrays(1, &vaoID);
+        std::cout << "Ok!\n" << std::endl;
+    }
+    
+    /* Delete vbo! */
+    if(glIsBuffer(vboID) == GL_TRUE) {
+        std::cout << "Delete vertex buffer object..." << std::endl;
+        glDeleteBuffers(1, &vboID);
+        std::cout << "Ok!\n" << std::endl;
     }
     
     /* Terminate glfw */

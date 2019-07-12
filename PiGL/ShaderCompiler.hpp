@@ -17,10 +17,11 @@
 #include <fstream>
 #include <vector>
 
+#include <GL/glew.h>
+
 #ifndef __arm__
     #include <OpenGL/gl3.h>
 #else
-    #include <GL/glew.h>
     #include <GL/gl.h>
 #endif
 

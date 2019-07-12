@@ -39,6 +39,8 @@
 		D96E4E5422D7EC3500149D88 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		D96E4E5622D8804100149D88 /* ShaderCompiler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderCompiler.cpp; sourceTree = "<group>"; };
 		D96E4E5722D8804100149D88 /* ShaderCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ShaderCompiler.hpp; sourceTree = "<group>"; };
+		D9A7456F22D8A2590041B8CD /* basic.vertex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic.vertex; sourceTree = "<group>"; };
+		D9A7457022D8A2590041B8CD /* basic.fragment */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic.fragment; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 		D96E4E4222D7E2C000149D88 /* PiGL */ = {
 			isa = PBXGroup;
 			children = (
+				D9A7456E22D8A20C0041B8CD /* Shaders */,
 				D96E4E4322D7E2C000149D88 /* main.cpp */,
 				D96E4E5122D7E7F600149D88 /* WInfos.hpp */,
 				D96E4E5222D7E99A00149D88 /* WInfos.cpp */,
@@ -93,6 +96,15 @@
 				D96E4E4B22D7E2E100149D88 /* OpenGL.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D9A7456E22D8A20C0041B8CD /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				D9A7457022D8A2590041B8CD /* basic.fragment */,
+				D9A7456F22D8A2590041B8CD /* basic.vertex */,
+			);
+			path = Shaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
