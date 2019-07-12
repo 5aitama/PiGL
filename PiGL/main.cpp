@@ -132,14 +132,25 @@ int main(int argc, const char * argv[]) {
     
     view = glm::lookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     
+    float last_time     = static_cast<float>(glfwGetTime());
+    float delta_time    = 0.0f;
+    
     /* Loop */
     while(!glfwWindowShouldClose(window)) {
+        
+        float current_time    = static_cast<float>(glfwGetTime());
+        delta_time      = current_time - last_time;
+        last_time       = current_time;
+        
+        // std::cout << delta_time << std::endl;
         
         /* Clear with white color... */
         glClearColor(0.26, 0.27, 0.28, 1);
         
         /* Clear sreen */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        model = glm::rotate(model, delta_time, glm::vec3(0.0f, 0.0f, 1.0f));
         
         /* Use shader */
         glUseProgram(shader.GetProgramID());
