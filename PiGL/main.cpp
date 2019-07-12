@@ -45,23 +45,20 @@
 
 int main(int argc, const char * argv[]) {
     
-    WInfos winfos(800, 600, "Hello world", CONTEXT_MAJOR, CONTEXT_MINOR);
-    
     /* Initialise GLFW */
     if(!glfwInit()) {
         std::cout << "Failed when init GLFW..." << std::endl;
         return -1;
     }
     
+    WInfos winfos(800, 600, "Hello world", CONTEXT_MAJOR, CONTEXT_MINOR);
+    
     /* Version of OpenGL context */
     glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, winfos.context_version_major);
     glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, winfos.context_version_minor);
     
-    /* For Mac OS only? */
-    // #ifndef __arm__
-        glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //#endif
+    glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     /* Create window */
     GLFWwindow* window = glfwCreateWindow(winfos.width, winfos.height, winfos.title.c_str(), NULL, NULL);
@@ -91,24 +88,53 @@ int main(int argc, const char * argv[]) {
     
     std::cout << "Shader is compiled ? " << shader.IsCompiled() << std::endl;
     
-    float verts[9] = {
-        -1.0f, -1.0f,  0.0f,
-         0.0f, 1.0f,  0.0f,
-         1.0f, -1.0f,  0.0f
+    float verts[12] = {
+        -0.5f, -0.5f, 0.0f,  // bottom left
+        -0.5f,  0.5f, 0.0f,   // top left
+         0.5f,  0.5f, 0.0f,  // top right
+         0.5f, -0.5f, 0.0f,  // bottom right
     };
     
-    float colors[9] = {
+    float colors[12] = {
         1.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f
+        0.0f, 0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
     };
     
-    unsigned short triangles[3] = {
-        0, 1, 2
+    GLubyte triangles[6] = {
+        0, 1, 2,
+        0, 2, 3,
     };
     
-    GLuint vboID;
+    GLuint VBO, VAO, EBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    
+    glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24 , 0, GL_STATIC_DRAW);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 12, verts);
+            glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 12, sizeof(float) * 12, colors);
+    
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 6, 0, GL_STATIC_DRAW);
+            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLubyte) * 6, triangles);
+    
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+            glEnableVertexAttribArray(0);
+    
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(float) * 12));
+            glEnableVertexAttribArray(1);
+    
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    
+    /*GLuint vboID;
     glGenBuffers(1, &vboID);
+    
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 9 * 2, 0, GL_STATIC_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 9, verts);
@@ -128,24 +154,33 @@ int main(int argc, const char * argv[]) {
     
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+ 
     
     GLuint eboID;
     glGenBuffers(1, &eboID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, 0, GL_STATIC_DRAW);
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned short) * 3, triangles);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 3, 0, GL_STATIC_DRAW);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLubyte) * 3, triangles);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
+    */
+    /*
+     *  Matrix part
+     */
     glm::mat4 projection = glm::perspective(45.0f, static_cast<float>(winfos.width) / static_cast<float>(winfos.height), 0.1f, 100.0f);
     glm::mat4 view(1.0f);
     glm::mat4 model(1.0f);
     
     view = glm::lookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     
+    /*
+     *  Delta time part
+     */
     double last_time     = glfwGetTime();
     double delta_time    = 0.0f;
     
     double total_delta = 0.f;
+    
+    // FPS counter
     uint fps = 0;
     
     /* Loop */
@@ -164,7 +199,7 @@ int main(int argc, const char * argv[]) {
             fps++;
         }
         
-        /* Clear with white color... */
+        /* Clear screen with a color... */
         glClearColor(0.26, 0.27, 0.28, 1);
         
         /* Clear sreen */
@@ -174,14 +209,15 @@ int main(int argc, const char * argv[]) {
         
         /* Use shader */
         glUseProgram(shader.GetProgramID());
-            glBindVertexArray(vaoID);
+            glBindVertexArray(VAO);
+        
+                /* Send MVP matrices */
                 glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
                 glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "V"), 1, GL_FALSE, glm::value_ptr(view));
                 glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "P"), 1, GL_FALSE, glm::value_ptr(projection));
         
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-                    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, BUFFER_OFFSET(0));
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                /* Draw the mesh */
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, BUFFER_OFFSET(0));
         
             glBindVertexArray(0);
         glUseProgram(0);
@@ -194,23 +230,23 @@ int main(int argc, const char * argv[]) {
     }
     
     /* Delete vao! */
-    if(glIsVertexArray(vaoID) == GL_TRUE) {
+    if(glIsVertexArray(VAO) == GL_TRUE) {
         std::cout << "Delete vertex array object..." << std::endl;
-        glDeleteVertexArrays(1, &vaoID);
-        std::cout << "Ok!\n" << std::endl;
-    }
-    
-    /* Delete ebo */
-    if(glIsBuffer(eboID) == GL_TRUE) {
-        std::cout << "Delete element buffer object..." << std::endl;
-        glDeleteBuffers(1, &eboID);
+        glDeleteVertexArrays(1, &VAO);
         std::cout << "Ok!\n" << std::endl;
     }
     
     /* Delete vbo! */
-    if(glIsBuffer(vboID) == GL_TRUE) {
+    if(glIsBuffer(VBO) == GL_TRUE) {
         std::cout << "Delete vertex buffer object..." << std::endl;
-        glDeleteBuffers(1, &vboID);
+        glDeleteBuffers(1, &VBO);
+        std::cout << "Ok!\n" << std::endl;
+    }
+    
+    /* Delete ebo */
+    if(glIsBuffer(EBO) == GL_TRUE) {
+        std::cout << "Delete element buffer object..." << std::endl;
+        glDeleteBuffers(1, &EBO);
         std::cout << "Ok!\n" << std::endl;
     }
     
