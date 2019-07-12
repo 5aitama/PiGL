@@ -103,6 +103,10 @@ int main(int argc, const char * argv[]) {
         0.0f, 0.0f, 1.0f
     };
     
+    unsigned short triangles[3] = {
+        0, 1, 2
+    };
+    
     GLuint vboID;
     glGenBuffers(1, &vboID);
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
@@ -125,6 +129,12 @@ int main(int argc, const char * argv[]) {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     
+    GLuint eboID;
+    glGenBuffers(1, &eboID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, 0, GL_STATIC_DRAW);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned short) * 3, triangles);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
     glm::mat4 projection = glm::perspective(45.0f, static_cast<float>(winfos.width) / static_cast<float>(winfos.height), 0.1f, 100.0f);
     glm::mat4 view(1.0f);
@@ -168,7 +178,11 @@ int main(int argc, const char * argv[]) {
                 glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
                 glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "V"), 1, GL_FALSE, glm::value_ptr(view));
                 glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "P"), 1, GL_FALSE, glm::value_ptr(projection));
-                glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+                    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, BUFFER_OFFSET(0));
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        
             glBindVertexArray(0);
         glUseProgram(0);
         
@@ -183,6 +197,13 @@ int main(int argc, const char * argv[]) {
     if(glIsVertexArray(vaoID) == GL_TRUE) {
         std::cout << "Delete vertex array object..." << std::endl;
         glDeleteVertexArrays(1, &vaoID);
+        std::cout << "Ok!\n" << std::endl;
+    }
+    
+    /* Delete ebo */
+    if(glIsBuffer(eboID) == GL_TRUE) {
+        std::cout << "Delete element buffer object..." << std::endl;
+        glDeleteBuffers(1, &eboID);
         std::cout << "Ok!\n" << std::endl;
     }
     

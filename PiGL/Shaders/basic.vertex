@@ -1,11 +1,11 @@
 # version 330
 
-layout(location = 0) in vec3 in_vert;
-layout(location = 1) in vec3 in_color;
+layout(location = 0) in vec3 in_vert; // Vertices
+layout(location = 1) in vec3 in_color; // Colors
 
-uniform mat4 M;
-uniform mat4 V;
-uniform mat4 P;
+uniform mat4 M; // Model matrix
+uniform mat4 V; // View matrix
+uniform mat4 P; // Projection matrix
 
 out vec4 o_color;
 
