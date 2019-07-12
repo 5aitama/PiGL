@@ -6,11 +6,14 @@
 //  Copyright © 2019 Alex Sb. All rights reserved.
 //
 
+#define GL_SILENCE_DEPRECATION
+
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "WInfos.hpp"
+#include "ShaderCompiler.hpp"
 
 #ifdef __arm__
     #define CONTEXT_MAJOR 3
@@ -55,6 +58,13 @@ int main(int argc, const char * argv[]) {
     
     /* Init GLEW */
     glewInit();
+    
+    // ‎⁨Mac OS⁩ ▸ ⁨Users⁩ ▸ ⁨alexsb⁩ ▸ ⁨Desktop⁩ ▸ ⁨QLib⁩ ▸ ⁨QLib⁩ ▸ ⁨Shader⁩
+    ShaderCompiler shader("/Users/alexsb/Desktop/QLib/QLib/Shader/basic.vertex",
+                          "/Users/alexsb/Desktop/QLib/QLib/Shader/basic.fragment");
+    shader.Compile();
+    
+    std::cout << "Shader is compiled ? " << shader.IsCompiled() << std::endl;
     
     /* Loop */
     while(!glfwWindowShouldClose(window)) {
