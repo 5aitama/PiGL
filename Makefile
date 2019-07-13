@@ -84,7 +84,7 @@ run: mrproper $(EXEC) mrproper
 
 # Clean all .o
 clean:
-	@rm -f $(OBJECTS)
+	@rm -f $(OBJECTS) error.log
 
 # Clean all .o and the program
 mrproper: clean
