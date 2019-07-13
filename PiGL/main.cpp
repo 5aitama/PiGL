@@ -97,6 +97,13 @@ int main(int argc, const char * argv[]) {
          0.5f, -0.5f, 0.0f,  // bottom right
     };
     
+    float norms[12] = {
+        0.0f, 0.0f, -1.0f,
+        0.0f, 0.0f, -1.0f,
+        0.0f, 0.0f, -1.0f,
+        0.0f, 0.0f, -1.0f
+    };
+    
     float colors[12] = {
         1.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
@@ -117,9 +124,10 @@ int main(int argc, const char * argv[]) {
     glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
     
-            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24 , 0, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 , 0, GL_STATIC_DRAW);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 12, verts);
             glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 12, sizeof(float) * 12, colors);
+            glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 24, sizeof(float) * 12, norms);
     
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 6, 0, GL_STATIC_DRAW);
@@ -130,6 +138,9 @@ int main(int argc, const char * argv[]) {
     
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(float) * 12));
             glEnableVertexAttribArray(1);
+    
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(float) * 24));
+            glEnableVertexAttribArray(2);
     
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
