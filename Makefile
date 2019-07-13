@@ -13,8 +13,14 @@ OBJECTS+= $(ROOT)/WInfos/WInfos.o
 OBJECTS+= $(ROOT)/ShaderCompiler/ShaderCompiler.o
 OBJECTS+= $(ROOT)/main.o
 
-CLEAR_COLOR=\e[0m
-COLOR_RED=\e[31
+NO_COLOR=\x1b[0m
+OK_COLOR=\x1b[32;01m
+ERROR_COLOR=\x1b[31;01m
+WARN_COLOR=\x1b[33;01m
+
+OK_STRING=$(OK_COLOR)Ok!$(NO_COLOR)
+ERROR_STRING=$(ERROR_COLOR)Error!$(NO_COLOR)
+WARN_STRING=$(WARN_COLOR)Warning!$(NO_COLOR)
 
 # Libraries
 LIBS=
@@ -47,21 +53,21 @@ all: $(EXEC)
 
 # Compile and run
 $(EXEC): $(OBJECTS)
-	@echo -e "$(COLOR_RED)Compile & run$(CLEAR_COLOR)"
-	$(CC) -o $(BUILD_PATH)/$@ $^ $(LIBS)
+	@$(CC) -o $(BUILD_PATH)/$@ $^ $(LIBS)
 
 # Create .o with .cpp
 %.o: %.cpp
-	$(CC) -o $@ -c $<
+	@echo "Compile $<...\c"
+	@if $(CC) -o $@ -c $< ; then echo "$(OK_STRING)" ; else echo "$(ERROR_STRING)" ; fi
 
 # Clean all .o and the program, compile and run
 run: mrproper $(EXEC)
-	./$(BUILD_PATH)/$(EXEC)
+	@./$(BUILD_PATH)/$(EXEC)
 
 # Clean all .o
 clean:
-	rm -f $(OBJECTS)
+	@rm -f $(OBJECTS)
 
 # Clean all .o and the program
 mrproper: clean
-	rm -f $(BUILD_PATH)/$(EXEC)
+	@rm -f $(BUILD_PATH)/$(EXEC)
