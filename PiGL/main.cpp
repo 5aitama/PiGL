@@ -45,8 +45,20 @@
 #include "WInfos.hpp"
 #include "ShaderCompiler.hpp"
 
+int w_width, w_height;
+glm::mat4 projection;
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    w_width = width;
+    w_height = height;
+    glViewport(0, 0, width, height);
+    projection = glm::perspective(45.0f, static_cast<float>(w_width) / static_cast<float>(w_height), 0.1f, 100.0f);
+}
+
 int main(int argc, const char * argv[]) {
-    
+    w_width = 800;
+    w_height = 600;
     /* Initialise GLFW */
     if(!glfwInit()) {
         std::cout << "Failed when init GLFW..." << std::endl;
@@ -78,10 +90,12 @@ int main(int argc, const char * argv[]) {
     /* Init GLEW */
     glewInit();
     
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    
     glViewport(0, 0, winfos.width, winfos.height);
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
-    
+    glEnable(GL_DEPTH_TEST);
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     ShaderCompiler shader("Shaders/basic.vertex",
@@ -90,31 +104,128 @@ int main(int argc, const char * argv[]) {
     
     std::cout << "Shader is compiled ? " << shader.IsCompiled() << std::endl;
     
-    float verts[12] = {
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f,   // top left
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
+    glm::vec3 verts[24] = {
+//        glm::vec3(-0.5f, -0.5f, -0.5f), // 0
+//        glm::vec3(-0.5f,  0.5f, -0.5f), // 1
+//        glm::vec3( 0.5f,  0.5f, -0.5f), // 2
+//        glm::vec3( 0.5f, -0.5f, -0.5f), // 3
+//
+//        glm::vec3(-0.5f, -0.5f,  0.5f), // 4
+//        glm::vec3(-0.5f,  0.5f,  0.5f), // 5
+//        glm::vec3( 0.5f,  0.5f,  0.5f), // 6
+//        glm::vec3( 0.5f, -0.5f,  0.5f), // 7
+        
+        // VERTICES ------------------------
+        glm::vec3(-0.5f, -0.5f, -0.5f), // 0
+        glm::vec3(-0.5f,  0.5f, -0.5f), // 1
+        glm::vec3( 0.5f,  0.5f, -0.5f), // 2
+        glm::vec3( 0.5f, -0.5f, -0.5f), // 3
+        
+        glm::vec3( 0.5f, -0.5f, -0.5f), // 3
+        glm::vec3( 0.5f,  0.5f, -0.5f), // 2
+        glm::vec3( 0.5f,  0.5f,  0.5f), // 6
+        glm::vec3( 0.5f, -0.5f,  0.5f), // 7
+        
+        glm::vec3( 0.5f, -0.5f,  0.5f), // 7
+        glm::vec3( 0.5f,  0.5f,  0.5f), // 6
+        glm::vec3(-0.5f,  0.5f,  0.5f), // 5
+        glm::vec3(-0.5f, -0.5f,  0.5f), // 4
+        
+        glm::vec3(-0.5f, -0.5f,  0.5f), // 4
+        glm::vec3(-0.5f,  0.5f,  0.5f), // 5
+        glm::vec3(-0.5f,  0.5f, -0.5f), // 1
+        glm::vec3(-0.5f, -0.5f, -0.5f), // 0
+        
+        glm::vec3(-0.5f,  0.5f, -0.5f), // 1
+        glm::vec3(-0.5f,  0.5f,  0.5f), // 5
+        glm::vec3( 0.5f,  0.5f,  0.5f), // 6
+        glm::vec3( 0.5f,  0.5f, -0.5f), // 2
+        
+        glm::vec3(-0.5f, -0.5f,  0.5f), // 4
+        glm::vec3(-0.5f, -0.5f, -0.5f), // 0
+        glm::vec3( 0.5f, -0.5f, -0.5f), // 3
+        glm::vec3( 0.5f, -0.5f,  0.5f), // 7
     };
     
-    float norms[12] = {
-        0.0f, 0.0f, -1.0f,
-        0.0f, 0.0f, -1.0f,
-        0.0f, 0.0f, -1.0f,
-        0.0f, 0.0f, -1.0f
+    glm::vec3 norms[24] = {
+        glm::vec3( 0.0f,  0.0f, -1.0f),
+        glm::vec3( 0.0f,  0.0f, -1.0f),
+        glm::vec3( 0.0f,  0.0f, -1.0f),
+        glm::vec3( 0.0f,  0.0f, -1.0f),
+        
+        glm::vec3( 1.0f,  0.0f,  0.0f),
+        glm::vec3( 1.0f,  0.0f,  0.0f),
+        glm::vec3( 1.0f,  0.0f,  0.0f),
+        glm::vec3( 1.0f,  0.0f,  0.0f),
+        
+        glm::vec3( 0.0f,  0.0f,  1.0f),
+        glm::vec3( 0.0f,  0.0f,  1.0f),
+        glm::vec3( 0.0f,  0.0f,  1.0f),
+        glm::vec3( 0.0f,  0.0f,  1.0f),
+        
+        glm::vec3(-1.0f,  0.0f,  0.0f),
+        glm::vec3(-1.0f,  0.0f,  0.0f),
+        glm::vec3(-1.0f,  0.0f,  0.0f),
+        glm::vec3(-1.0f,  0.0f,  0.0f),
+        
+        glm::vec3( 0.0f,  1.0f,  0.0f),
+        glm::vec3( 0.0f,  1.0f,  0.0f),
+        glm::vec3( 0.0f,  1.0f,  0.0f),
+        glm::vec3( 0.0f,  1.0f,  0.0f),
+        
+        glm::vec3( 0.0f, -1.0f,  0.0f),
+        glm::vec3( 0.0f, -1.0f,  0.0f),
+        glm::vec3( 0.0f, -1.0f,  0.0f),
+        glm::vec3( 0.0f, -1.0f,  0.0f),
     };
     
-    float colors[12] = {
-        1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
+    glm::vec3 colors[24] = {
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
     };
     
-    GLubyte triangles[6] = {
-        0, 1, 2,
-        0, 2, 3,
+    GLubyte triangles[36] = {
+        0 + (0 * 4), 1 + (0 * 4), 2 + (0 * 4), 0 + (0 * 4), 2 + (0 * 4), 3 + (0 * 4),
+        0 + (1 * 4), 1 + (1 * 4), 2 + (1 * 4), 0 + (1 * 4), 2 + (1 * 4), 3 + (1 * 4),
+        0 + (2 * 4), 1 + (2 * 4), 2 + (2 * 4), 0 + (2 * 4), 2 + (2 * 4), 3 + (2 * 4),
+        0 + (3 * 4), 1 + (3 * 4), 2 + (3 * 4), 0 + (3 * 4), 2 + (3 * 4), 3 + (3 * 4),
+        0 + (4 * 4), 1 + (4 * 4), 2 + (4 * 4), 0 + (4 * 4), 2 + (4 * 4), 3 + (4 * 4),
+        0 + (5 * 4), 1 + (5 * 4), 2 + (5 * 4), 0 + (5 * 4), 2 + (5 * 4), 3 + (5 * 4),
     };
+    
+    size_t size_of_vert_bytes = sizeof(float) * 3 * 24;
+    size_t size_of_norm_bytes = sizeof(float) * 3 * 24;
+    size_t size_of_colo_bytes = sizeof(float) * 3 * 24;
+    size_t size_of_tris_bytes = sizeof(GLubyte) * 36;
+    
+    size_t total_size = size_of_vert_bytes + size_of_norm_bytes + size_of_colo_bytes;
     
     GLuint VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -124,28 +235,30 @@ int main(int argc, const char * argv[]) {
     glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
     
-            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 , 0, GL_STATIC_DRAW);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 12, verts);
-            glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 12, sizeof(float) * 12, colors);
-            glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 24, sizeof(float) * 12, norms);
+    glBufferData(GL_ARRAY_BUFFER, total_size , 0, GL_STATIC_DRAW);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, size_of_vert_bytes, verts);
+            glBufferSubData(GL_ARRAY_BUFFER, size_of_vert_bytes, size_of_colo_bytes, colors);
+            glBufferSubData(GL_ARRAY_BUFFER, size_of_vert_bytes + size_of_colo_bytes, size_of_norm_bytes, norms);
     
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 6, 0, GL_STATIC_DRAW);
-            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLubyte) * 6, triangles);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, size_of_tris_bytes, 0, GL_STATIC_DRAW);
+            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size_of_tris_bytes, triangles);
     
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
             glEnableVertexAttribArray(0);
     
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(float) * 12));
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(size_of_vert_bytes));
             glEnableVertexAttribArray(1);
     
-            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(float) * 24));
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(size_of_vert_bytes + size_of_colo_bytes));
             glEnableVertexAttribArray(2);
     
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    glm::mat4 projection = glm::perspective(45.0f, static_cast<float>(winfos.width) / static_cast<float>(winfos.height), 0.1f, 100.0f);
+    
+    
+    // glfwGetFramebufferSize(window, &width, &height);
+    projection = glm::perspective(45.0f, static_cast<float>(w_width) / static_cast<float>(w_height), 0.1f, 100.0f);
     glm::mat4 view(1.0f);
     glm::mat4 model(1.0f);
     
@@ -184,7 +297,7 @@ int main(int argc, const char * argv[]) {
         /* Clear sreen */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        model = glm::rotate(model, static_cast<float>(delta_time), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::rotate(model, static_cast<float>(delta_time), glm::vec3(0.25f, 0.50f, 1.0f));
         
         /* Use shader */
         glUseProgram(shader.GetProgramID());
@@ -196,7 +309,7 @@ int main(int argc, const char * argv[]) {
                 glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "P"), 1, GL_FALSE, glm::value_ptr(projection));
         
                 /* Draw the mesh */
-                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, BUFFER_OFFSET(0));
+                glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, BUFFER_OFFSET(0));
         
             glBindVertexArray(0);
         glUseProgram(0);
