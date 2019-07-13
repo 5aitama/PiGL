@@ -9,23 +9,23 @@
 #define GL_SILENCE_DEPRECATION
 
 #ifndef BUFFER_OFFSET
-    #define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
+#define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
 #endif
 
 #ifndef GLM_FORCE_LEFT_HANDED
-    #define GLM_FORCE_LEFT_HANDED
+#define GLM_FORCE_LEFT_HANDED
 #endif
 
 #ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
 #endif
 
-#ifdef __arm__
-    #define CONTEXT_MAJOR 3
-    #define CONTEXT_MINOR 3
+#ifdef __APPLE__
+#define CONTEXT_MAJOR 4
+#define CONTEXT_MINOR 1
 #else
-    #define CONTEXT_MAJOR 4
-    #define CONTEXT_MINOR 1
+#define CONTEXT_MAJOR 3
+#define CONTEXT_MINOR 3
 #endif
 
 #include <iostream>
@@ -35,7 +35,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #ifdef __APPLE__
-    #include <OpenGL/gl3.h>
+#include <OpenGL/gl3.h>
+#elif __arm__
+#include <GL/gl.h>
 #endif
 
 #include <GLFW/glfw3.h>
@@ -131,41 +133,7 @@ int main(int argc, const char * argv[]) {
     
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    
-    /*GLuint vboID;
-    glGenBuffers(1, &vboID);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 9 * 2, 0, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 9, verts);
-        glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 9, sizeof(float) * 9, colors);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-    GLuint vaoID;
-    glGenVertexArrays(1, &vaoID);
-    glBindVertexArray(vaoID);
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-    
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-            glEnableVertexAttribArray(0);
-    
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(float) * 9));
-            glEnableVertexAttribArray(1);
-    
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
- 
-    
-    GLuint eboID;
-    glGenBuffers(1, &eboID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 3, 0, GL_STATIC_DRAW);
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLubyte) * 3, triangles);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    */
-    /*
-     *  Matrix part
-     */
+
     glm::mat4 projection = glm::perspective(45.0f, static_cast<float>(winfos.width) / static_cast<float>(winfos.height), 0.1f, 100.0f);
     glm::mat4 view(1.0f);
     glm::mat4 model(1.0f);
