@@ -57,7 +57,7 @@ $(EXEC): $(OBJECTS)
 
 # Create .o with .cpp
 %.o: %.cpp
-	@echo "Compile $<...\c"
+	@echo -e "Compile $<...\c"
 	@if $(CC) -o $@ -c $< ; then echo "$(OK_STRING)" ; else echo "$(ERROR_STRING)" ; fi
 
 # Clean all .o and the program, compile, run and clean all .o and program when he finnished to execute...
