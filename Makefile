@@ -13,11 +13,29 @@ OBJECTS+= $(ROOT)/WInfos/WInfos.o
 OBJECTS+= $(ROOT)/ShaderCompiler/ShaderCompiler.o
 OBJECTS+= $(ROOT)/main.o
 
-NO_COLOR=\x1b[0m
-OK_COLOR=\x1b[32;01m
-ERROR_COLOR=\x1b[31;01m
-WARN_COLOR=\x1b[33;01m
+# Text colors for beautifull text!
+NO_COLOR=
+OK_COLOR=
+ERROR_COLOR=
+WARN_COLOR=
 
+# Color for Raspberry Pi
+ifeq ($(PLATFORM),RASPI)
+	NO_COLOR=\033[0m
+	OK_COLOR=\033[0;32m
+	ERROR_COLOR=\33[0;31m
+	WARN_COLOR=\33[0;33m
+endif
+
+# Color for Mac OS
+ifeq ($(PLATFORM),MACOS)
+	NO_COLOR=\x1b[0m
+	OK_COLOR=\x1b[32;01m
+	ERROR_COLOR=\x1b[31;01m
+	WARN_COLOR=\x1b[33;01m
+endif
+
+# Ok, Error, Warning string messages.
 OK_STRING=$(OK_COLOR)Ok!$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)Error!$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)Warning!$(NO_COLOR)
