@@ -45,6 +45,7 @@
 
 #include "WInfos/WInfos.hpp"
 #include "ShaderCompiler/ShaderCompiler.hpp"
+#include "SVertex/SVertex.hpp"
 
 int w_width = 800;
 int w_height = 600;
@@ -100,128 +101,88 @@ int main(int argc, const char * argv[]) {
     glCullFace(GL_FRONT);
     glEnable(GL_DEPTH_TEST);
 
-    // std::cout << glGetString(GL_VERSION) << std::endl;
-
     ShaderCompiler shader("PiGL/Shaders/basic.vertex", "PiGL/Shaders/basic.fragment");
     shader.Compile();
 
     // Check if shader is compiled successfully
     if(!shader.IsCompiled()) return -1;
-    
-    glm::vec3 verts[24] = {
 
-        glm::vec3(-0.5f, -0.5f, -0.5f), // 0
-        glm::vec3(-0.5f,  0.5f, -0.5f), // 1
-        glm::vec3( 0.5f,  0.5f, -0.5f), // 2
-        glm::vec3( 0.5f, -0.5f, -0.5f), // 3
-        
-        glm::vec3( 0.5f, -0.5f, -0.5f), // 3
-        glm::vec3( 0.5f,  0.5f, -0.5f), // 2
-        glm::vec3( 0.5f,  0.5f,  0.5f), // 6
-        glm::vec3( 0.5f, -0.5f,  0.5f), // 7
-        
-        glm::vec3( 0.5f, -0.5f,  0.5f), // 7
-        glm::vec3( 0.5f,  0.5f,  0.5f), // 6
-        glm::vec3(-0.5f,  0.5f,  0.5f), // 5
-        glm::vec3(-0.5f, -0.5f,  0.5f), // 4
-        
-        glm::vec3(-0.5f, -0.5f,  0.5f), // 4
-        glm::vec3(-0.5f,  0.5f,  0.5f), // 5
-        glm::vec3(-0.5f,  0.5f, -0.5f), // 1
-        glm::vec3(-0.5f, -0.5f, -0.5f), // 0
-        
-        glm::vec3(-0.5f,  0.5f, -0.5f), // 1
-        glm::vec3(-0.5f,  0.5f,  0.5f), // 5
-        glm::vec3( 0.5f,  0.5f,  0.5f), // 6
-        glm::vec3( 0.5f,  0.5f, -0.5f), // 2
-        
-        glm::vec3(-0.5f, -0.5f,  0.5f), // 4
-        glm::vec3(-0.5f, -0.5f, -0.5f), // 0
-        glm::vec3( 0.5f, -0.5f, -0.5f), // 3
-        glm::vec3( 0.5f, -0.5f,  0.5f), // 7
+    SVertex base_vertices[] = {
+        /* Face Z- */
+        SVertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
+        SVertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 0, 0)),
+        SVertex(glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0)),
+        SVertex(glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1)),
+
+        /* Face Z+ */
+        SVertex(glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
+        SVertex(glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 0, 0)),
+        SVertex(glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0)),
+        SVertex(glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1)),
+    };
+
+    SVertex vertices[24] = {
+        /* Face Z- */
+        base_vertices[0], base_vertices[1], base_vertices[2], base_vertices[3],
+        /* Face X+ */
+        base_vertices[3], base_vertices[2], base_vertices[6], base_vertices[7],
+        /* Face Z+ */
+        base_vertices[7], base_vertices[6], base_vertices[5], base_vertices[4],
+        /* Face X- */
+        base_vertices[4], base_vertices[5], base_vertices[1], base_vertices[0],
+        /* Face Y+ */
+        base_vertices[1], base_vertices[5], base_vertices[6], base_vertices[2],
+        /* Face Y- */
+        base_vertices[4], base_vertices[0], base_vertices[3], base_vertices[7],
+    };
+
+    /* Normal for each faces of the cube */
+    glm::vec3 face_normals[6] = {
+        glm::vec3(0.0f, 0.0f, -1.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec3(-1.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec3(0.0f, -1.0f, 0.0f),
     };
     
-    glm::vec3 norms[24] = {
-        glm::vec3( 0.0f,  0.0f, -1.0f),
-        glm::vec3( 0.0f,  0.0f, -1.0f),
-        glm::vec3( 0.0f,  0.0f, -1.0f),
-        glm::vec3( 0.0f,  0.0f, -1.0f),
-        
-        glm::vec3( 1.0f,  0.0f,  0.0f),
-        glm::vec3( 1.0f,  0.0f,  0.0f),
-        glm::vec3( 1.0f,  0.0f,  0.0f),
-        glm::vec3( 1.0f,  0.0f,  0.0f),
-        
-        glm::vec3( 0.0f,  0.0f,  1.0f),
-        glm::vec3( 0.0f,  0.0f,  1.0f),
-        glm::vec3( 0.0f,  0.0f,  1.0f),
-        glm::vec3( 0.0f,  0.0f,  1.0f),
-        
-        glm::vec3(-1.0f,  0.0f,  0.0f),
-        glm::vec3(-1.0f,  0.0f,  0.0f),
-        glm::vec3(-1.0f,  0.0f,  0.0f),
-        glm::vec3(-1.0f,  0.0f,  0.0f),
-        
-        glm::vec3( 0.0f,  1.0f,  0.0f),
-        glm::vec3( 0.0f,  1.0f,  0.0f),
-        glm::vec3( 0.0f,  1.0f,  0.0f),
-        glm::vec3( 0.0f,  1.0f,  0.0f),
-        
-        glm::vec3( 0.0f, -1.0f,  0.0f),
-        glm::vec3( 0.0f, -1.0f,  0.0f),
-        glm::vec3( 0.0f, -1.0f,  0.0f),
-        glm::vec3( 0.0f, -1.0f,  0.0f),
-    };
+    glm::vec3 extract_v[24]; // Vertex extracted from SVertex
+    glm::vec3 extract_n[24]; // Normal extracted from SVertex
+    glm::vec3 extract_c[24]; // Color extracted from SVertex
+
+    /* Extract vertices, normals and colors of SVertex */
+    for(size_t i = 0; i < 24; i++) {
+        extract_v[i] = vertices[i].position;
+        extract_n[i] = face_normals[i / 4];
+        extract_c[i] = vertices[i].color;
+    }
+
+    GLubyte triangles[36]; // Triangles of the cube
+
+    /* Calculate triangles of each face of the cube */
+    for(GLubyte i = 0; i < 36; i += 6) {
+        GLubyte index = (i / 6) * 4;
+
+        triangles[i + 0] = 0 + index;
+        triangles[i + 1] = 1 + index;
+        triangles[i + 2] = 2 + index;
+
+        triangles[i + 3] = 0 + index;
+        triangles[i + 4] = 2 + index;
+        triangles[i + 5] = 3 + index;
+    }
     
-    glm::vec3 colors[24] = {
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-    };
+    size_t size_of_vert_bytes  = sizeof(float) * 3 * 24; // Size (in bytes) of extract_v array
+    size_t size_of_norm_bytes = sizeof(float) * 3 * 24; // Size (in bytes) of extract_n array
+    size_t size_of_colo_bytes  = sizeof(float) * 3 * 24; // Size (in bytes) of extract_c array
+    size_t size_of_tris_bytes  = sizeof(GLubyte) * 36;  // Size (in bytes) of triangles array
     
-    GLubyte triangles[36] = {
-        0 + (0 * 4), 1 + (0 * 4), 2 + (0 * 4), 0 + (0 * 4), 2 + (0 * 4), 3 + (0 * 4),
-        0 + (1 * 4), 1 + (1 * 4), 2 + (1 * 4), 0 + (1 * 4), 2 + (1 * 4), 3 + (1 * 4),
-        0 + (2 * 4), 1 + (2 * 4), 2 + (2 * 4), 0 + (2 * 4), 2 + (2 * 4), 3 + (2 * 4),
-        0 + (3 * 4), 1 + (3 * 4), 2 + (3 * 4), 0 + (3 * 4), 2 + (3 * 4), 3 + (3 * 4),
-        0 + (4 * 4), 1 + (4 * 4), 2 + (4 * 4), 0 + (4 * 4), 2 + (4 * 4), 3 + (4 * 4),
-        0 + (5 * 4), 1 + (5 * 4), 2 + (5 * 4), 0 + (5 * 4), 2 + (5 * 4), 3 + (5 * 4),
-    };
     
-    size_t size_of_vert_bytes = sizeof(float) * 3 * 24;
-    size_t size_of_norm_bytes = sizeof(float) * 3 * 24;
-    size_t size_of_colo_bytes = sizeof(float) * 3 * 24;
-    size_t size_of_tris_bytes = sizeof(GLubyte) * 36;
-    
-    size_t total_size = size_of_vert_bytes + size_of_norm_bytes + size_of_colo_bytes;
+    size_t total_size = size_of_vert_bytes + size_of_norm_bytes + size_of_colo_bytes; // The buffer size (in bytes)
     
     GLuint VBO, VAO, EBO;
+
+    /* Generate VBO, VAO and EBO */
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -229,10 +190,10 @@ int main(int argc, const char * argv[]) {
     glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
     
-    glBufferData(GL_ARRAY_BUFFER, total_size , 0, GL_STATIC_DRAW);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, size_of_vert_bytes, verts);
-            glBufferSubData(GL_ARRAY_BUFFER, size_of_vert_bytes, size_of_colo_bytes, colors);
-            glBufferSubData(GL_ARRAY_BUFFER, size_of_vert_bytes + size_of_colo_bytes, size_of_norm_bytes, norms);
+            glBufferData(GL_ARRAY_BUFFER, total_size , 0, GL_STATIC_DRAW);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, size_of_vert_bytes, extract_v);
+            glBufferSubData(GL_ARRAY_BUFFER, size_of_vert_bytes, size_of_colo_bytes, extract_c);
+            glBufferSubData(GL_ARRAY_BUFFER, size_of_vert_bytes + size_of_colo_bytes, size_of_norm_bytes, extract_n);
     
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, size_of_tris_bytes, 0, GL_STATIC_DRAW);

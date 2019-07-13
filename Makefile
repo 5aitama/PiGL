@@ -9,6 +9,7 @@ BUILD_PATH=PiGL/Build
 
 # Files to compile
 OBJECTS=
+OBJECTS+= $(ROOT)/SVertex/SVertex.o
 OBJECTS+= $(ROOT)/WInfos/WInfos.o
 OBJECTS+= $(ROOT)/ShaderCompiler/ShaderCompiler.o
 OBJECTS+= $(ROOT)/main.o
@@ -75,7 +76,7 @@ $(EXEC): $(OBJECTS)
 
 # Create .o with .cpp
 %.o: %.cpp
-	@echo "Compile $<...\c"
+	@echo "Build $<...\c"
 	@if $(CC) -o $@ -c $< 2> error.log ; then echo "$(OK_STRING)" ; else echo "$(ERROR_STRING)" ; fi;
 
 # Clean all .o and the program, compile, run and clean all .o and program when he finnished to execute...
