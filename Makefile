@@ -52,7 +52,7 @@ $(EXEC): $(OBJECTS)
 
 # Clean all .o and the program, compile and run
 run: mrproper $(EXEC)
-	$(BUILD_PATH)/$(EXEC)
+	./$(BUILD_PATH)/$(EXEC)
 
 # Clean all .o
 clean:
