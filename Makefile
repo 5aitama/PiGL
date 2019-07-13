@@ -13,6 +13,9 @@ OBJECTS+= $(ROOT)/WInfos/WInfos.o
 OBJECTS+= $(ROOT)/ShaderCompiler/ShaderCompiler.o
 OBJECTS+= $(ROOT)/main.o
 
+CLEAR_COLOR=\e[0m
+COLOR_RED=\e[31
+
 # Libraries
 LIBS=
 
@@ -44,6 +47,7 @@ all: $(EXEC)
 
 # Compile and run
 $(EXEC): $(OBJECTS)
+	@echo -e "$(COLOR_RED)Compile & run$(CLEAR_COLOR)"
 	$(CC) -o $(BUILD_PATH)/$@ $^ $(LIBS)
 
 # Create .o with .cpp
