@@ -60,8 +60,8 @@ $(EXEC): $(OBJECTS)
 	@echo "Compile $<...\c"
 	@if $(CC) -o $@ -c $< ; then echo "$(OK_STRING)" ; else echo "$(ERROR_STRING)" ; fi
 
-# Clean all .o and the program, compile and run
-run: mrproper $(EXEC)
+# Clean all .o and the program, compile, run and clean all .o and program when he finnished to execute...
+run: mrproper $(EXEC) mrproper
 	@./$(BUILD_PATH)/$(EXEC)
 
 # Clean all .o
