@@ -79,7 +79,7 @@ const size_t Mesh::GetTrianglesLength()
     return triangles_length;
 }
 
-ShaderCompiler& Mesh::GetShader() 
+const ShaderCompiler& Mesh::GetShader() 
 {
     return shader;
 }

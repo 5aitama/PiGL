@@ -59,7 +59,7 @@ public:
     const void DrawMesh(const glm::mat4& m, const glm::mat4& v, const glm::mat4& p);
 
     // Get the shader object of the mesh
-    ShaderCompiler& GetShader();
+    const ShaderCompiler& GetShader();
 
 protected:
     GLuint vbo = 0;
