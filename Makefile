@@ -81,8 +81,8 @@ $(EXEC): $(OBJECTS)
 	@if $(CC) -o $@ -c $< 2> error.log ; then echo "$(OK_STRING)" ; else echo "$(ERROR_STRING)" ; fi;
 
 # Clean all .o and the program, compile, run and clean all .o and program when he finnished to execute...
-run: mrproper $(EXEC) mrproper
-	@./$(BUILD_PATH)/$(EXEC)
+run: mrproper $(EXEC)
+	@./$(BUILD_PATH)/$(EXEC) && make mrproper
 
 # Clean all .o
 clean:
