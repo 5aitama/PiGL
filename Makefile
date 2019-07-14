@@ -15,6 +15,7 @@ OBJECTS+= $(ROOT)/Shader/Shader.o
 OBJECTS+= $(ROOT)/Mesh/Mesh.o
 OBJECTS+= $(ROOT)/Transform/Transform.o
 OBJECTS+= $(ROOT)/Camera/Camera.o
+OBJECTS+= $(ROOT)/Scene/Scene.o
 OBJECTS+= $(ROOT)/main.o
 
 # Text colors for beautifull text!

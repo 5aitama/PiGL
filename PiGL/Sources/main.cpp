@@ -44,23 +44,9 @@
 #include "Shader/Shader.hpp"
 #include "SVertex/SVertex.hpp"
 #include "Mesh/Mesh.hpp"
-
-int w_width = 800;
-int w_height = 600;
-
-Camera camera(w_width, w_height, 45.f, 0.1f, 100.0f);
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    camera.SetScreenSize(width, height);
-    w_width = width;
-    w_height = height;
-    glViewport(0, 0, width, height);
-}
+#include "Scene/Scene.hpp"
 
 int main() {
-    w_width = 800;
-    w_height = 600;
 
     /* Initialise GLFW */
     if(!glfwInit()) {
@@ -80,6 +66,8 @@ int main() {
     /* Create window */
     GLFWwindow* window = glfwCreateWindow(winfos.width, winfos.height, winfos.title.c_str(), NULL, NULL);
     
+    // Camera camera(winfos.width, winfos.height, 45.f, 0.1f, 100.0f);
+
     /* Check window */
     if(!window) {
         std::cout << "Erreur lors de la création de la fenetere!" << std::endl;
@@ -93,21 +81,19 @@ int main() {
     /* Init GLEW */
     glewInit();
     
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    
-    glViewport(0, 0, winfos.width, winfos.height);
-    glFrontFace(GL_CW);
-    glCullFace(GL_FRONT);
-    glEnable(GL_DEPTH_TEST);
+    // glViewport(0, 0, winfos.width, winfos.height);
+    // glFrontFace(GL_CW);
+    // glCullFace(GL_FRONT);
+    // glEnable(GL_DEPTH_TEST);
 
     SVertex base_vertices[] = {
-        /* Face Z- */
+        // Face Z-
         SVertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
         SVertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 0, 0)),
         SVertex(glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0)),
         SVertex(glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1)),
 
-        /* Face Z+ */
+        // Face Z+
         SVertex(glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
         SVertex(glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 0, 0)),
         SVertex(glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0)),
@@ -115,17 +101,22 @@ int main() {
     };
 
     SVertex vertices[24] = {
-        /* Face Z- */
+        // Face Z-
         base_vertices[0], base_vertices[1], base_vertices[2], base_vertices[3],
-        /* Face X+ */
+        
+        // Face X+
         base_vertices[3], base_vertices[2], base_vertices[6], base_vertices[7],
-        /* Face Z+ */
+        
+        // Face Z+
         base_vertices[7], base_vertices[6], base_vertices[5], base_vertices[4],
-        /* Face X- */
+        
+        // Face X-
         base_vertices[4], base_vertices[5], base_vertices[1], base_vertices[0],
-        /* Face Y+ */
+        
+        // Face Y+
         base_vertices[1], base_vertices[5], base_vertices[6], base_vertices[2],
-        /* Face Y- */
+
+        // Face Y-
         base_vertices[4], base_vertices[0], base_vertices[3], base_vertices[7],
     };
 
@@ -163,8 +154,8 @@ int main() {
     mesh.SetTriangles(triangles, 36);
     mesh.BuildMesh();
     
-    camera.Translate(glm::vec3(0, 0, -5));
-    camera.Rotate(glm::vec3(0, 0, 0));
+    // camera.Translate(glm::vec3(0, 0, -5));
+    // camera.Rotate(glm::vec3(0, 0, 0));
 
     /*
      *  Delta time part
@@ -176,6 +167,10 @@ int main() {
     
     // FPS counter
     unsigned short fps = 0;
+
+    Scene scene(winfos, window);
+
+    scene.AddMesh(&mesh, "MyMesh");
     
     /* Loop */
     while(!glfwWindowShouldClose(window)) {
@@ -187,7 +182,7 @@ int main() {
         // Set the last time to the current
         last_time       = current_time;
         
-        // for fps
+        // For fps
         total_delta += delta_time;
 
         // Write FPS in the console, and reset fps and total_delta.
@@ -198,27 +193,31 @@ int main() {
         } else {
             fps++;
         }
-        
-        /* Clear screen with a color... */
-        glClearColor(0, 0, 0, 0);
-        
-        /* Clear sreen */
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        /* Rotate the mesh */
-        // model = glm::rotate(model, static_cast<float>(delta_time), glm::vec3(0.25f, 0.50f, 1.0f));
-        mesh.Rotate(glm::vec3(0.25f, 0.5f, 1.0f) * static_cast<float>(delta_time));
 
-        // camera.Rotate(glm::vec3(0.0f, 50.0f * delta_time, 0.0f));
+        scene.OnBeforeRenderGameObjects();
+        scene.OnUpdate(delta_time);
+        scene.OnRenderGameObjects();
         
-        /* Draw the mesh */
-        mesh.DrawMesh(camera);
+        // /* Clear screen with a color... */
+        // glClearColor(0, 0, 0, 0);
         
-        /* Pool events */
-        glfwPollEvents();
+        // /* Clear sreen */
+        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        // /* Rotate the mesh */
+        // // model = glm::rotate(model, static_cast<float>(delta_time), glm::vec3(0.25f, 0.50f, 1.0f));
+        // mesh.Rotate(glm::vec3(0.25f, 0.5f, 1.0f) * static_cast<float>(delta_time));
 
-        /* Swap buffers */
-        glfwSwapBuffers(window);
+        // // camera.Rotate(glm::vec3(0.0f, 50.0f * delta_time, 0.0f));
+        
+        // /* Draw the mesh */
+        // mesh.DrawMesh(camera);
+        
+        // /* Pool events */
+        // glfwPollEvents();
+
+        // /* Swap buffers */
+        // glfwSwapBuffers(window);
     }
     
     /* Terminate glfw */

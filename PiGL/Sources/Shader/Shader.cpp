@@ -9,21 +9,21 @@
 #include "Shader.hpp"
 
 Shader::Shader() :
-    vertSrc("PiGL/Shaders/default.vertex"),
-    fragSrc("PiGL/Shaders/default.fragment"),
+    compiled(false),
     programID(0),
     v_shader(0),
     f_shader(0),
-    compiled(false)
+    vertSrc("PiGL/Shaders/default.vertex"),
+    fragSrc("PiGL/Shaders/default.fragment")
 { /* ... */ }
 
 Shader::Shader(const std::string& vertSrc, const std::string& fragSrc) :
-    vertSrc(vertSrc),
-    fragSrc(fragSrc),
+    compiled(false),
     programID(0),
     v_shader(0),
     f_shader(0),
-    compiled(false)
+    vertSrc(vertSrc),
+    fragSrc(fragSrc)
 { /* ... */ }
 
 Shader::Shader(const Shader& shader) 
