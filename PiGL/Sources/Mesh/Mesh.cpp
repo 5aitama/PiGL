@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 
-Mesh::Mesh(const ShaderCompiler& shader) 
+Mesh::Mesh(const Shader& shader) 
     : vertices(nullptr), vertices_length(0), triangles(nullptr), triangles_length(0), vao(0), vbo(0), ebo(0), shader(shader)
     { /* ... */ }
 
@@ -79,7 +79,7 @@ const size_t Mesh::GetTrianglesLength()
     return triangles_length;
 }
 
-const ShaderCompiler& Mesh::GetShader() 
+const Shader& Mesh::GetShader() 
 {
     return shader;
 }

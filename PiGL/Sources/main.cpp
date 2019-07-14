@@ -40,7 +40,7 @@
 #include <GLFW/glfw3.h>
 
 #include "WInfos/WInfos.hpp"
-#include "ShaderCompiler/ShaderCompiler.hpp"
+#include "Shader/Shader.hpp"
 #include "SVertex/SVertex.hpp"
 #include "Mesh/Mesh.hpp"
 
@@ -167,7 +167,7 @@ int main(int argc, const char * argv[]) {
         triangles[i + 5] = 3 + index;
     }
 
-    Mesh mesh(ShaderCompiler("PiGL/Shaders/basic.vertex", "PiGL/Shaders/basic.fragment"));
+    Mesh mesh(Shader("PiGL/Shaders/basic.vertex", "PiGL/Shaders/basic.fragment"));
     mesh.SetVertices(vertices, 24);
     mesh.SetTriangles(triangles, 36);
     mesh.BuildMesh();

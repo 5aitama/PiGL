@@ -1,14 +1,14 @@
 //
-//  ShaderCompiler.cpp
+//  Shader.cpp
 //  PiGL
 //
 //  Created by Alex Sb on 12/07/2019.
 //  Copyright © 2019 Alex Sb. All rights reserved.
 //
 
-#include "ShaderCompiler.hpp"
+#include "Shader.hpp"
 
-ShaderCompiler::ShaderCompiler(const std::string& vertSrc, const std::string& fragSrc) :
+Shader::Shader(const std::string& vertSrc, const std::string& fragSrc) :
     vertSrc(vertSrc),
     fragSrc(fragSrc),
     programID(0),
@@ -17,7 +17,7 @@ ShaderCompiler::ShaderCompiler(const std::string& vertSrc, const std::string& fr
     compiled(false)
 { /* ... */ }
 
-ShaderCompiler::ShaderCompiler(const ShaderCompiler& shader) 
+Shader::Shader(const Shader& shader) 
     : vertSrc(shader.vertSrc),
      fragSrc(shader.fragSrc),
      programID(0),
@@ -28,7 +28,7 @@ ShaderCompiler::ShaderCompiler(const ShaderCompiler& shader)
     Compile(); 
 }
 
-ShaderCompiler::~ShaderCompiler() {
+Shader::~Shader() {
     if(glIsProgram(programID) == GL_TRUE) {
         glDeleteProgram(programID);
     }
@@ -60,11 +60,11 @@ const std::string ReadFile(const std::string& path) {
     }
 }
 
-const bool ShaderCompiler::IsCompiled() {
+const bool Shader::IsCompiled() {
     return compiled;
 }
 
-void ShaderCompiler::Compile() {
+void Shader::Compile() {
     
     compiled = false;
     
@@ -185,6 +185,6 @@ void ShaderCompiler::Compile() {
     compiled = true;
 }
 
-const GLuint ShaderCompiler::GetProgramID() {
+const GLuint Shader::GetProgramID() {
     return programID;
 }

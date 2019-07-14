@@ -11,7 +11,7 @@ BUILD_PATH=PiGL/Build
 OBJECTS=
 OBJECTS+= $(ROOT)/SVertex/SVertex.o
 OBJECTS+= $(ROOT)/WInfos/WInfos.o
-OBJECTS+= $(ROOT)/ShaderCompiler/ShaderCompiler.o
+OBJECTS+= $(ROOT)/Shader/Shader.o
 OBJECTS+= $(ROOT)/Mesh/Mesh.o
 OBJECTS+= $(ROOT)/main.o
 

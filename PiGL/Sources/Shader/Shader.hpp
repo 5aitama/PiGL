@@ -1,5 +1,5 @@
 //
-//  ShaderCompiler.hpp
+//  Shader.hpp
 //  PiGL
 //
 //  Created by Alex Sb on 12/07/2019.
@@ -23,14 +23,14 @@
     #include <GL/gl.h>
 #endif
 
-#ifndef ShaderCompiler_hpp
-#define ShaderCompiler_hpp
+#ifndef Shader_hpp
+#define Shader_hpp
 
-class ShaderCompiler {
+class Shader {
 public:
-     ShaderCompiler(const std::string& vertSrc, const std::string& fragSrc);
-     ShaderCompiler(const ShaderCompiler& shader);
-    ~ShaderCompiler();
+     Shader(const std::string& vertSrc, const std::string& fragSrc);
+     Shader(const Shader& shader);
+    ~Shader();
     
     void Compile();
     const GLuint GetProgramID();
@@ -44,4 +44,4 @@ private:
     std::string fragSrc;
 };
 
-#endif /* ShaderCompiler_hpp */
+#endif /* Shader_hpp */
