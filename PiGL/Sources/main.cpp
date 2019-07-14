@@ -187,16 +187,22 @@ int main(int argc, const char * argv[]) {
     double total_delta = 0.f;
     
     // FPS counter
-    uint fps = 0;
+    unsigned short fps = 0;
     
     /* Loop */
     while(!glfwWindowShouldClose(window)) {
         
+        // Get the current time
         double current_time    = glfwGetTime();
+        // Calculate the delta of it
         delta_time      = current_time - last_time;
+        // Set the last time to the current
         last_time       = current_time;
         
+        // for fps
         total_delta += delta_time;
+
+        // Write FPS in the console, and reset fps and total_delta.
         if(total_delta >= 1.0f) {
             std::cout << fps << "fps" << std::endl;
             fps = 0;
@@ -211,13 +217,15 @@ int main(int argc, const char * argv[]) {
         /* Clear sreen */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        /* Rotate the mesh */
         model = glm::rotate(model, static_cast<float>(delta_time), glm::vec3(0.25f, 0.50f, 1.0f));
 
+        /* Draw the mesh */
         mesh.DrawMesh(model, view, projection);
         
         /* Pool events */
         glfwPollEvents();
-        
+
         /* Swap buffers */
         glfwSwapBuffers(window);
     }
