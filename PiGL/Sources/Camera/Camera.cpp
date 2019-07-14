@@ -21,7 +21,8 @@ void Camera::SetScreenSize(const int& width, const int& height)
     screen_width = width;
     screen_height = height;
 
-    CalculateProjection();
+    // Recalculate ratio, and projection matrix
+    SetRatio(static_cast<float>(screen_width) / static_cast<float>(screen_height));
 }
 
 void Camera::SetNear(const float& near) 

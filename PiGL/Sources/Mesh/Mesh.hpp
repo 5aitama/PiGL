@@ -52,9 +52,9 @@ public:
     const unsigned short* GetTriangles();
 
     // Get the vertex array length
-    size_t GetVerticesLength();
+    size_t GetVerticesLength() const;
     // Get the triangle array length
-    size_t GetTrianglesLength();
+    size_t GetTrianglesLength() const;
 
     // Build the mesh
     void BuildMesh();
@@ -62,7 +62,7 @@ public:
     void DrawMesh(const Camera& camera) const;
 
     // Get the shader object of the mesh
-    const Shader& GetShader();
+    const Shader& GetShader() const;
 
 protected:
     GLuint vbo;

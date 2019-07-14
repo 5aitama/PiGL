@@ -73,17 +73,17 @@ const unsigned short* Mesh::GetTriangles()
     return triangles;
 }
 
-size_t Mesh::GetVerticesLength() 
+size_t Mesh::GetVerticesLength() const
 {
     return vertices_length;
 }
 
-size_t Mesh::GetTrianglesLength() 
+size_t Mesh::GetTrianglesLength() const
 {
     return triangles_length;
 }
 
-const Shader& Mesh::GetShader() 
+const Shader& Mesh::GetShader() const
 {
     return shader;
 }
