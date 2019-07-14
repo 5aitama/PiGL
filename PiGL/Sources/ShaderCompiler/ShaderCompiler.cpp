@@ -15,8 +15,18 @@ ShaderCompiler::ShaderCompiler(const std::string& vertSrc, const std::string& fr
     v_shader(0),
     f_shader(0),
     compiled(false)
-    
 { /* ... */ }
+
+ShaderCompiler::ShaderCompiler(const ShaderCompiler& shader) 
+    : vertSrc(shader.vertSrc),
+     fragSrc(shader.fragSrc),
+     programID(0),
+     v_shader(0),
+     f_shader(0),
+     compiled(false)
+{ 
+    Compile(); 
+}
 
 ShaderCompiler::~ShaderCompiler() {
     if(glIsProgram(programID) == GL_TRUE) {

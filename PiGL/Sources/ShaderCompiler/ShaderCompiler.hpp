@@ -29,6 +29,7 @@
 class ShaderCompiler {
 public:
      ShaderCompiler(const std::string& vertSrc, const std::string& fragSrc);
+     ShaderCompiler(const ShaderCompiler& shader);
     ~ShaderCompiler();
     
     void Compile();
