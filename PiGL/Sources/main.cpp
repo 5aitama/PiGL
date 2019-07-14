@@ -142,17 +142,6 @@ int main() {
     for(size_t i = 0; i < 24; i++) {
         vertices[i].normal = face_normals[i / 4];
     }
-    
-    glm::vec3 extract_v[24]; // Vertex extracted from SVertex
-    glm::vec3 extract_n[24]; // Normal extracted from SVertex
-    glm::vec3 extract_c[24]; // Color extracted from SVertex
-
-    /* Extract vertices, normals and colors of SVertex */
-    for(size_t i = 0; i < 24; i++) {
-        extract_v[i] = vertices[i].position;
-        extract_n[i] = vertices[i].normal;
-        extract_c[i] = vertices[i].color;
-    }
 
     unsigned short triangles[36]; // Triangles of the cube
 

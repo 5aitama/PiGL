@@ -22,7 +22,7 @@ void Mesh::GenerateVBO()
     glGenBuffers(1, &vbo);
 }
 
-const GLuint& Mesh::GetVBO() 
+const GLuint& Mesh::GetVBO() const
 {
     return vbo;
 }
@@ -34,7 +34,7 @@ void Mesh::GenerateVAO()
     glGenVertexArrays(1, &vao);
 }
 
-const GLuint& Mesh::GetVAO()
+const GLuint& Mesh::GetVAO() const
 {
     return vao;
 }
@@ -46,7 +46,7 @@ void Mesh::GenerateEBO()
     glGenBuffers(1, &ebo);
 }
 
-const GLuint& Mesh::GetEBO() 
+const GLuint& Mesh::GetEBO() const
 {
     return ebo;
 }
@@ -63,14 +63,14 @@ void Mesh::SetTriangles(unsigned short* triangles, const size_t& length)
     triangles_length = length;
 }
 
-const SVertex& Mesh::GetVertices() 
+const SVertex* Mesh::GetVertices() 
 {
-    return *vertices;
+    return vertices;
 }
 
-const unsigned short& Mesh::GetTriangles() 
+const unsigned short* Mesh::GetTriangles() 
 {
-    return *triangles;
+    return triangles;
 }
 
 size_t Mesh::GetVerticesLength() 

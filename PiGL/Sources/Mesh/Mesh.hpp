@@ -35,11 +35,11 @@ public:
     void GenerateEBO();
 
     // Return the VBO ID
-    const GLuint& GetVBO();
+    const GLuint& GetVBO() const;
     // Return the VAO ID
-    const GLuint& GetVAO();
+    const GLuint& GetVAO() const;
     // Return the EBO ID
-    const GLuint& GetEBO();
+    const GLuint& GetEBO() const;
 
     // Assign the vertex array of the mesh
     void SetVertices(SVertex* vertices, const size_t& length);
@@ -47,9 +47,9 @@ public:
     void SetTriangles(unsigned short* triangles, const size_t& length);
 
     // Get the vertex array of the mesh
-    const SVertex& GetVertices();
+    const SVertex* GetVertices();
     // Get the triangle array of the mesh
-    const unsigned short& GetTriangles();
+    const unsigned short* GetTriangles();
 
     // Get the vertex array length
     size_t GetVerticesLength();

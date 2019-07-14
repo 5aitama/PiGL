@@ -40,11 +40,12 @@ glm::mat4 Transform::GetMatrix()  const
 const glm::mat4 Transform::CalculateMatrix() 
 {
     glm::mat4 identity = glm::mat4(1.0f);
+    
     identity = glm::translate(identity, position);
     identity = glm::scale(identity, scale);
     identity *= glm::toMat4(quaternion);
+
     return identity;
-    // return glm::lookAt(position, position + quaternion * glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void Transform::Translate(const glm::vec3& direction) 
