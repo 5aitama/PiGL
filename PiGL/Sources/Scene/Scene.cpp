@@ -58,6 +58,8 @@ void Scene::OnUpdate(const double& deltaTime)
 
 void Scene::OnRenderGameObjects() 
 {
+    
+    // Draw all mesh
     for(auto it = meshes.begin(); it != meshes.end(); it++) 
     {
         it->second->DrawMesh(mainCamera);

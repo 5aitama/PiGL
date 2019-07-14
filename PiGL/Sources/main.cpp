@@ -80,24 +80,19 @@ int main() {
     
     /* Init GLEW */
     glewInit();
-    
-    // glViewport(0, 0, winfos.width, winfos.height);
-    // glFrontFace(GL_CW);
-    // glCullFace(GL_FRONT);
-    // glEnable(GL_DEPTH_TEST);
 
     SVertex base_vertices[] = {
         // Face Z-
         SVertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
-        SVertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 0, 0)),
-        SVertex(glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0)),
-        SVertex(glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1)),
+        SVertex(glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
+        SVertex(glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
+        SVertex(glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
 
         // Face Z+
         SVertex(glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
-        SVertex(glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 0, 0)),
-        SVertex(glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0)),
-        SVertex(glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(0, 0, 1)),
+        SVertex(glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
+        SVertex(glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
+        SVertex(glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
     };
 
     SVertex vertices[24] = {
@@ -153,9 +148,6 @@ int main() {
     mesh.SetVertices(vertices, 24);
     mesh.SetTriangles(triangles, 36);
     mesh.BuildMesh();
-    
-    // camera.Translate(glm::vec3(0, 0, -5));
-    // camera.Rotate(glm::vec3(0, 0, 0));
 
     /*
      *  Delta time part
@@ -197,27 +189,6 @@ int main() {
         scene.OnBeforeRenderGameObjects();
         scene.OnUpdate(delta_time);
         scene.OnRenderGameObjects();
-        
-        // /* Clear screen with a color... */
-        // glClearColor(0, 0, 0, 0);
-        
-        // /* Clear sreen */
-        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        // /* Rotate the mesh */
-        // // model = glm::rotate(model, static_cast<float>(delta_time), glm::vec3(0.25f, 0.50f, 1.0f));
-        // mesh.Rotate(glm::vec3(0.25f, 0.5f, 1.0f) * static_cast<float>(delta_time));
-
-        // // camera.Rotate(glm::vec3(0.0f, 50.0f * delta_time, 0.0f));
-        
-        // /* Draw the mesh */
-        // mesh.DrawMesh(camera);
-        
-        // /* Pool events */
-        // glfwPollEvents();
-
-        // /* Swap buffers */
-        // glfwSwapBuffers(window);
     }
     
     /* Terminate glfw */
