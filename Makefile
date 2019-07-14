@@ -9,13 +9,12 @@ BUILD_PATH=PiGL/Build
 
 # Files to compile
 OBJECTS=
-OBJECTS+= $(ROOT)/Camera/Camera.o
 OBJECTS+= $(ROOT)/SVertex/SVertex.o
 OBJECTS+= $(ROOT)/WInfos/WInfos.o
 OBJECTS+= $(ROOT)/Shader/Shader.o
 OBJECTS+= $(ROOT)/Mesh/Mesh.o
 OBJECTS+= $(ROOT)/Transform/Transform.o
-# OBJECTS+= $(ROOT)/Camera/Camera.o
+OBJECTS+= $(ROOT)/Camera/Camera.o
 OBJECTS+= $(ROOT)/main.o
 
 # Text colors for beautifull text!
