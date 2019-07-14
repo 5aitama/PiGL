@@ -21,6 +21,7 @@
 
 class Mesh {
 public:
+    Mesh();
     Mesh(const Shader& shader);
     ~Mesh();
 

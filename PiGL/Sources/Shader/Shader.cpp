@@ -8,6 +8,15 @@
 
 #include "Shader.hpp"
 
+Shader::Shader() :
+    vertSrc("PiGL/Shaders/default.vertex"),
+    fragSrc("PiGL/Shaders/default.fragment"),
+    programID(0),
+    v_shader(0),
+    f_shader(0),
+    compiled(false)
+{ /* ... */ }
+
 Shader::Shader(const std::string& vertSrc, const std::string& fragSrc) :
     vertSrc(vertSrc),
     fragSrc(fragSrc),

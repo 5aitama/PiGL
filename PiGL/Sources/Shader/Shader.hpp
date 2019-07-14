@@ -28,8 +28,9 @@
 
 class Shader {
 public:
-     Shader(const std::string& vertSrc, const std::string& fragSrc);
-     Shader(const Shader& shader);
+    Shader();
+    Shader(const std::string& vertSrc, const std::string& fragSrc);
+    Shader(const Shader& shader);
     ~Shader();
     
     void Compile();

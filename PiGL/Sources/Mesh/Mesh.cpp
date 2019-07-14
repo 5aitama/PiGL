@@ -1,5 +1,9 @@
 #include "Mesh.hpp"
 
+Mesh::Mesh() 
+    : vertices(nullptr), vertices_length(0), triangles(nullptr), triangles_length(0), vao(0), vbo(0), ebo(0), shader()
+    { /* ... */ }
+
 Mesh::Mesh(const Shader& shader) 
     : vertices(nullptr), vertices_length(0), triangles(nullptr), triangles_length(0), vao(0), vbo(0), ebo(0), shader(shader)
     { /* ... */ }
@@ -89,8 +93,12 @@ const void Mesh::BuildMesh()
     // Check if shader is compiled
     if(!shader.IsCompiled()) 
     {
-        std::cout << "Can't build mesh, shader is not compiled!" << std::endl;
-        return;
+        shader.Compile();
+        if(!shader.IsCompiled()) 
+        {
+            std::cout << "Can't build mesh, shader is not compiled!" << std::endl;
+            return;
+        }
     }
 
     // Check if object need to initialize

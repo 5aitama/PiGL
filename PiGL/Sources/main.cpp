@@ -167,7 +167,7 @@ int main(int argc, const char * argv[]) {
         triangles[i + 5] = 3 + index;
     }
 
-    Mesh mesh(Shader("PiGL/Shaders/basic.vertex", "PiGL/Shaders/basic.fragment"));
+    Mesh mesh;
     mesh.SetVertices(vertices, 24);
     mesh.SetTriangles(triangles, 36);
     mesh.BuildMesh();
