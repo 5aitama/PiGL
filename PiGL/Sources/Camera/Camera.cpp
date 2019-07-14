@@ -1,17 +1,19 @@
 #include "Camera.hpp"
 
-Camera::Camera() 
-    : near(0.1f), 
-    far(100.0f),
-    screen_width(800),
-    screen_height(600),
-    ratio(static_cast<float>(screen_width) / static_cast<float>(screen_height)), 
-    projection(CalculateProjection())
+Camera::Camera() : Transform(), projection(), screen_width(0), screen_height(0), near(0.f), far(0.f), ratio(0.f), fov(0.f)
 { /* ... */ }
 
-Camera::~Camera() 
-{
+Camera::Camera(const int& sw, const int& sh, const float& fov, const float& near, const float& far)
+    : Transform(), projection(), screen_width(sw), screen_height(sh), near(near), far(far), ratio(static_cast<float>(sw) / static_cast<float>(sh)), fov(fov)
+{ 
+    CalculateProjection();
+}
 
+Camera::~Camera() 
+{ /* ... */ }
+
+const glm::mat4 Camera::CalculateMatrix() {
+    return glm::lookAt(GetPosition(), GetPosition() + GetQuaternion() * glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void Camera::SetScreenSize(const int& width, const int& height)
@@ -19,48 +21,40 @@ void Camera::SetScreenSize(const int& width, const int& height)
     screen_width = width;
     screen_height = height;
 
-    // Recalculate camera ratio, and camera matrix
-    SetRatio(static_cast<float>(screen_width) / static_cast<float>(screen_height));
+    CalculateProjection();
 }
 
 void Camera::SetNear(const float& near) 
 {
     this->near = near;
-
-    // Recalculate projection matrix
-    projection = CalculateProjection();
+    CalculateProjection();
 }
+
 
 void Camera::SetFar(const float& far)
 {
     this->far = far;
-
-    // Recalculate projection matrix
-    projection = CalculateProjection();
+    CalculateProjection();
 }
 
 void Camera::SetFov(const float& fov)
 {
     this->fov = fov;
-
-    // Recalculate projection matrix
-    projection = CalculateProjection();
+    CalculateProjection();
 }
 
 void Camera::SetRatio(const float& ratio) 
 {
     this->ratio = ratio;
-
-    // Recalculate projection matrix
-    projection = CalculateProjection();
+    CalculateProjection();
 }
 
-const glm::mat4& Camera::CalculateProjection() 
+void Camera::CalculateProjection()
 {
-    return glm::perspective(fov, ratio, near, far);
+    projection = glm::perspective(fov, ratio, near, far);
 }
 
-const glm::mat4& Camera::GetProjectionMatrix() 
+const glm::mat4 Camera::GetProjectionMatrix() const
 {
     return projection;
 }

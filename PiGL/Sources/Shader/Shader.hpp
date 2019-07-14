@@ -34,8 +34,8 @@ public:
     ~Shader();
     
     void Compile();
-    const GLuint GetProgramID();
-    const bool IsCompiled();
+    GLuint GetProgramID() const;
+    bool IsCompiled() const;
 private:
     bool compiled;
     GLuint programID;

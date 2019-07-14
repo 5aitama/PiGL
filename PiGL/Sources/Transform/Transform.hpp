@@ -1,17 +1,21 @@
-#include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
-
 #ifndef TRANSFORM_HPP
 #define TRANSFORM_HPP
+
+#ifndef GLM_FORCE_LEFT_HANDED
+#define GLM_FORCE_LEFT_HANDED
+#endif
+
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 class Transform 
 {
 public:
     Transform();
     ~Transform();
-
+    
     // Return a Quaternion from euleur angles
-    const glm::quat& QuatFromEuleurAngles(const glm::vec3& euleurAngles);
+    const glm::quat QuatFromEuleurAngles(const glm::vec3& euleurAngles);
 
     // Return the position
     const glm::vec3& GetPosition();
@@ -23,10 +27,10 @@ public:
     const glm::quat& GetQuaternion();
 
     // Return the model matrix
-    const glm::mat4& GetMatrix();
+    glm::mat4 GetMatrix() const;
 
     // Calculate the model matrix
-    const glm::mat4& CalculateMatrix(const glm::mat4& t, const glm::mat4& r, const glm::mat4& s);
+    virtual const glm::mat4 CalculateMatrix();
 
     // Translate the transform
     void Translate(const glm::vec3& direction);
@@ -35,7 +39,9 @@ public:
     // Scale the transform
     void Scale(const glm::vec3& s);
 
-protected:
+    glm::vec3 GetForward() const;
+
+private:
     // The position (in world) of the transform
     glm::vec3 position;
     // The scale of the transform

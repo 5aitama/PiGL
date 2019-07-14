@@ -1,11 +1,11 @@
 #include "Mesh.hpp"
 
 Mesh::Mesh() 
-    : vertices(nullptr), vertices_length(0), triangles(nullptr), triangles_length(0), vao(0), vbo(0), ebo(0), shader()
+    : Transform(), vertices(nullptr), vertices_length(0), triangles(nullptr), triangles_length(0), vao(0), vbo(0), ebo(0), shader()
     { /* ... */ }
 
 Mesh::Mesh(const Shader& shader) 
-    : vertices(nullptr), vertices_length(0), triangles(nullptr), triangles_length(0), vao(0), vbo(0), ebo(0), shader(shader)
+    : Transform(), vertices(nullptr), vertices_length(0), triangles(nullptr), triangles_length(0), vao(0), vbo(0), ebo(0), shader(shader)
     { /* ... */ }
 
 Mesh::~Mesh() 
@@ -15,7 +15,7 @@ Mesh::~Mesh()
     if(glIsBuffer(ebo) == GL_TRUE) glDeleteBuffers(1, &ebo);
 }
 
-const void Mesh::GenerateVBO() 
+void Mesh::GenerateVBO() 
 {
     std::cout << "Generate VBO..." << std::endl;
     if(glIsBuffer(vbo) == GL_TRUE) glDeleteBuffers(1, &vbo);
@@ -27,7 +27,7 @@ const GLuint& Mesh::GetVBO()
     return vbo;
 }
 
-const void Mesh::GenerateVAO() 
+void Mesh::GenerateVAO() 
 {
     std::cout << "Generate VAO..." << std::endl;
     if(glIsVertexArray(vao) == GL_TRUE) glDeleteVertexArrays(1, &vao);
@@ -39,7 +39,7 @@ const GLuint& Mesh::GetVAO()
     return vao;
 }
 
-const void Mesh::GenerateEBO() 
+void Mesh::GenerateEBO() 
 {
     std::cout << "Generate EBO..." << std::endl;
     if(glIsBuffer(ebo) == GL_TRUE) glDeleteBuffers(1, &ebo);
@@ -73,12 +73,12 @@ const unsigned short& Mesh::GetTriangles()
     return *triangles;
 }
 
-const size_t Mesh::GetVerticesLength() 
+size_t Mesh::GetVerticesLength() 
 {
     return vertices_length;
 }
 
-const size_t Mesh::GetTrianglesLength() 
+size_t Mesh::GetTrianglesLength() 
 {
     return triangles_length;
 }
@@ -88,11 +88,12 @@ const Shader& Mesh::GetShader()
     return shader;
 }
 
-const void Mesh::BuildMesh() 
+void Mesh::BuildMesh()
 {
     // Check if shader is compiled
     if(!shader.IsCompiled()) 
     {
+        std::cout << "Compile shader..." << std::endl;
         shader.Compile();
         if(!shader.IsCompiled()) 
         {
@@ -158,15 +159,15 @@ const void Mesh::BuildMesh()
     glBindVertexArray(0);
 }
 
-const void Mesh::DrawMesh(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) 
+void Mesh::DrawMesh(const Camera& camera) const
 {
     glUseProgram(shader.GetProgramID());
         glBindVertexArray(vao);
     
             /* Send MVP matrices */
-            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(model));
-            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "V"), 1, GL_FALSE, glm::value_ptr(view));
-            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "P"), 1, GL_FALSE, glm::value_ptr(projection));
+            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(GetMatrix()));
+            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "V"), 1, GL_FALSE, glm::value_ptr(camera.GetMatrix()));
+            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "P"), 1, GL_FALSE, glm::value_ptr(camera.GetProjectionMatrix()));
     
             /* Draw the mesh */
             glDrawElements(GL_TRIANGLES, triangles_length, GL_UNSIGNED_SHORT, BUFFER_OFFSET(0));

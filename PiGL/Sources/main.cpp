@@ -39,25 +39,26 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Camera/Camera.hpp"
 #include "WInfos/WInfos.hpp"
 #include "Shader/Shader.hpp"
 #include "SVertex/SVertex.hpp"
 #include "Mesh/Mesh.hpp"
-#include "Camera/Camera.hpp"
 
 int w_width = 800;
 int w_height = 600;
-glm::mat4 projection;
+
+Camera camera(w_width, w_height, 45.f, 0.1f, 100.0f);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    camera.SetScreenSize(width, height);
     w_width = width;
     w_height = height;
     glViewport(0, 0, width, height);
-    projection = glm::perspective(45.0f, static_cast<float>(w_width) / static_cast<float>(w_height), 0.1f, 100.0f);
 }
 
-int main(int argc, const char * argv[]) {
+int main() {
     w_width = 800;
     w_height = 600;
 
@@ -66,7 +67,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "Failed when init GLFW..." << std::endl;
         return -1;
     }
-    
+
     WInfos winfos(800, 600, "Hello world", CONTEXT_MAJOR, CONTEXT_MINOR);
     
     /* Version of OpenGL context */
@@ -173,15 +174,9 @@ int main(int argc, const char * argv[]) {
     mesh.SetTriangles(triangles, 36);
     mesh.BuildMesh();
     
-    // Projection Matrix
-    projection = glm::perspective(45.0f, static_cast<float>(w_width) / static_cast<float>(w_height), 0.1f, 100.0f);
-    // View Matrix
-    glm::mat4 view(1.0f);
-    // Model Matrix
-    glm::mat4 model(1.0f);
-    
-    view = glm::lookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    
+    camera.Translate(glm::vec3(0, 0, -5));
+    camera.Rotate(glm::vec3(0, 0, 0));
+
     /*
      *  Delta time part
      */
@@ -216,16 +211,19 @@ int main(int argc, const char * argv[]) {
         }
         
         /* Clear screen with a color... */
-        glClearColor(0.26, 0.27, 0.28, 1);
+        glClearColor(0, 0, 0, 0);
         
         /* Clear sreen */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         /* Rotate the mesh */
-        model = glm::rotate(model, static_cast<float>(delta_time), glm::vec3(0.25f, 0.50f, 1.0f));
+        // model = glm::rotate(model, static_cast<float>(delta_time), glm::vec3(0.25f, 0.50f, 1.0f));
+        mesh.Rotate(glm::vec3(0.25f, 0.5f, 1.0f) * static_cast<float>(delta_time));
 
+        // camera.Rotate(glm::vec3(0.0f, 50.0f * delta_time, 0.0f));
+        
         /* Draw the mesh */
-        mesh.DrawMesh(model, view, projection);
+        mesh.DrawMesh(camera);
         
         /* Pool events */
         glfwPollEvents();

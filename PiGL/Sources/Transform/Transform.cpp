@@ -2,14 +2,14 @@
 
 Transform::Transform() 
     : position(0.f), scale(1.f), euleurAngles(0.f), quaternion(QuatFromEuleurAngles(euleurAngles)), 
-    m_rotation(1.f), m_scale(1.f), m_translation(1.f), m_model(CalculateMatrix(m_translation, m_rotation, m_scale))
+    m_rotation(1.f), m_scale(1.f), m_translation(1.f), m_model(1.0f)
 { /* ... */ }
 
-const glm::quat& Transform::QuatFromEuleurAngles(const glm::vec3& euleurAngles) {
-    glm::quat qx(glm::vec4(1.f, 0.f, 0.f, euleurAngles.x));
-    glm::quat qy(glm::vec4(0.f, 1.f, 0.f, euleurAngles.y));
-    glm::quat qz(glm::vec4(0.f, 0.f, 1.f, euleurAngles.z));
-    return (qx * qy * qz);
+Transform::~Transform() 
+{ /* ... */ }
+
+const glm::quat Transform::QuatFromEuleurAngles(const glm::vec3& euleurAngles) {
+    return glm::quat((euleurAngles));
 }
 
 const glm::vec3& Transform::GetPosition() 
@@ -32,30 +32,50 @@ const glm::quat& Transform::GetQuaternion()
     return quaternion;
 }
 
-const glm::mat4& Transform::GetMatrix() 
+glm::mat4 Transform::GetMatrix()  const
 {
     return m_model;
 }
 
-const glm::mat4& Transform::CalculateMatrix(const glm::mat4& t, const glm::mat4& r, const glm::mat4& s) 
+const glm::mat4 Transform::CalculateMatrix() 
 {
-    return (t * r * s);
+    glm::mat4 identity = glm::mat4(1.0f);
+    identity = glm::translate(identity, position);
+    identity = glm::scale(identity, scale);
+    identity *= glm::toMat4(quaternion);
+    return identity;
+    // return glm::lookAt(position, position + quaternion * glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void Transform::Translate(const glm::vec3& direction) 
 {
-    m_translation = glm::translate(m_translation, direction);
-    m_model = CalculateMatrix(m_translation, m_rotation, m_scale);
+    position += direction;
+    m_model = CalculateMatrix();
 }
 
 void Transform::Rotate(const glm::vec3& euleurAngles) 
 {
-    m_rotation = glm::toMat4(QuatFromEuleurAngles(this->euleurAngles + euleurAngles));
-    m_model = CalculateMatrix(m_translation, m_rotation, m_scale);
+    this->euleurAngles += euleurAngles;
+    
+    if(this->euleurAngles.x > 180.0f) this->euleurAngles.x -= 360.0f;
+    if(this->euleurAngles.y > 180.0f) this->euleurAngles.y -= 360.0f;
+    if(this->euleurAngles.z > 180.0f) this->euleurAngles.z -= 360.0f;
+
+    if(this->euleurAngles.x < -180.0f) this->euleurAngles.x += 360.0f;
+    if(this->euleurAngles.y < -180.0f) this->euleurAngles.y += 360.0f;
+    if(this->euleurAngles.z < -180.0f) this->euleurAngles.z += 360.0f;
+
+    quaternion = QuatFromEuleurAngles(this->euleurAngles);
+    m_model = CalculateMatrix();
 }
 
 void Transform::Scale(const glm::vec3& scale) 
 {
-    m_scale = glm::scale(m_scale, scale);
-    m_model = CalculateMatrix(m_translation, m_rotation, m_scale);
+    this->scale += scale;
+    m_model = CalculateMatrix();
+}
+
+glm::vec3 Transform::GetForward() const 
+{
+    return quaternion * glm::vec3(0.0f, 0.0f, 1.0f);
 }

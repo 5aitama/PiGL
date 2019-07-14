@@ -9,12 +9,13 @@ BUILD_PATH=PiGL/Build
 
 # Files to compile
 OBJECTS=
+OBJECTS+= $(ROOT)/Camera/Camera.o
 OBJECTS+= $(ROOT)/SVertex/SVertex.o
 OBJECTS+= $(ROOT)/WInfos/WInfos.o
 OBJECTS+= $(ROOT)/Shader/Shader.o
-OBJECTS+= $(ROOT)/Transform/Transform.o
-OBJECTS+= $(ROOT)/Camera/Camera.o
 OBJECTS+= $(ROOT)/Mesh/Mesh.o
+OBJECTS+= $(ROOT)/Transform/Transform.o
+# OBJECTS+= $(ROOT)/Camera/Camera.o
 OBJECTS+= $(ROOT)/main.o
 
 # Text colors for beautifull text!
@@ -76,11 +77,12 @@ all: $(EXEC)
 # Compile and run
 $(EXEC): $(OBJECTS)
 	@$(CC) -o $(BUILD_PATH)/$@ $^ $(LIBS)
+	@cat error.log
 
 # Create .o with .cpp
 %.o: %.cpp
 	@echo "Build $<...\c"
-	@if $(CC) -o $@ -c $< 2> error.log ; then echo "$(OK_STRING)" ; else echo "$(ERROR_STRING)" ; fi;
+	@if $(CC) -Wall -Wextra -o $@ -c $< 2> error.log ; then echo "$(OK_STRING)" ; else echo "$(ERROR_STRING)" ; fi;
 
 # Clean all .o and the program, compile, run and clean all .o and program when he finnished to execute...
 run: mrproper $(EXEC)

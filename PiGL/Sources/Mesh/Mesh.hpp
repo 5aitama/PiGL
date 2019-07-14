@@ -1,10 +1,14 @@
-
+#ifndef MESH_HPP
+#define MESH_HPP
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../SVertex/SVertex.hpp"
 #include "../Shader/Shader.hpp"
+
+#include "../Transform/Transform.hpp"
+#include "../Camera/Camera.hpp"
 
 #ifndef BUFFER_OFFSET
 #define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
@@ -16,21 +20,19 @@
 #include <GL/gl.h>
 #endif
 
-#ifndef MESH_HPP
-#define MESH_HPP
-
-class Mesh {
+class Mesh : public Transform 
+{
 public:
     Mesh();
     Mesh(const Shader& shader);
     ~Mesh();
 
     // Generte Vertex Buffer Object
-    const void GenerateVBO();
+    void GenerateVBO();
     // Generate Vertex Array Object
-    const void GenerateVAO();
+    void GenerateVAO();
     // Generate Element Buffer Object
-    const void GenerateEBO();
+    void GenerateEBO();
 
     // Return the VBO ID
     const GLuint& GetVBO();
@@ -50,28 +52,28 @@ public:
     const unsigned short& GetTriangles();
 
     // Get the vertex array length
-    const size_t GetVerticesLength();
+    size_t GetVerticesLength();
     // Get the triangle array length
-    const size_t GetTrianglesLength();
+    size_t GetTrianglesLength();
 
     // Build the mesh
-    const void BuildMesh();
+    void BuildMesh();
     // Draw the mesh
-    const void DrawMesh(const glm::mat4& m, const glm::mat4& v, const glm::mat4& p);
+    void DrawMesh(const Camera& camera) const;
 
     // Get the shader object of the mesh
     const Shader& GetShader();
 
 protected:
-    GLuint vbo = 0;
-    GLuint vao = 0;
-    GLuint ebo = 0;
+    GLuint vbo;
+    GLuint vao;
+    GLuint ebo;
 
-    SVertex* vertices = nullptr;
-    size_t vertices_length = 0;
+    SVertex* vertices;
+    size_t vertices_length;
 
-    unsigned short* triangles = nullptr;
-    size_t triangles_length = 0;
+    unsigned short* triangles;
+    size_t triangles_length;
 
     Shader shader;
 };

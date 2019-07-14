@@ -69,7 +69,7 @@ const std::string ReadFile(const std::string& path) {
     }
 }
 
-const bool Shader::IsCompiled() {
+bool Shader::IsCompiled() const {
     return compiled;
 }
 
@@ -194,6 +194,6 @@ void Shader::Compile() {
     compiled = true;
 }
 
-const GLuint Shader::GetProgramID() {
+GLuint Shader::GetProgramID() const {
     return programID;
 }
