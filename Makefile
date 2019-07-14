@@ -12,6 +12,8 @@ OBJECTS=
 OBJECTS+= $(ROOT)/SVertex/SVertex.o
 OBJECTS+= $(ROOT)/WInfos/WInfos.o
 OBJECTS+= $(ROOT)/Shader/Shader.o
+OBJECTS+= $(ROOT)/Transform/Transform.o
+OBJECTS+= $(ROOT)/Camera/Camera.o
 OBJECTS+= $(ROOT)/Mesh/Mesh.o
 OBJECTS+= $(ROOT)/main.o
 

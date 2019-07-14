@@ -43,6 +43,7 @@
 #include "Shader/Shader.hpp"
 #include "SVertex/SVertex.hpp"
 #include "Mesh/Mesh.hpp"
+#include "Camera/Camera.hpp"
 
 int w_width = 800;
 int w_height = 600;
@@ -172,8 +173,11 @@ int main(int argc, const char * argv[]) {
     mesh.SetTriangles(triangles, 36);
     mesh.BuildMesh();
     
+    // Projection Matrix
     projection = glm::perspective(45.0f, static_cast<float>(w_width) / static_cast<float>(w_height), 0.1f, 100.0f);
+    // View Matrix
     glm::mat4 view(1.0f);
+    // Model Matrix
     glm::mat4 model(1.0f);
     
     view = glm::lookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
