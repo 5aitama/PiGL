@@ -35,14 +35,14 @@ void Scene::OnBeforeRenderGameObjects()
     glEnable(GL_DEPTH_TEST);
 
     // Get frame buffer size
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
+    // int width, height;
+    // glfwGetFramebufferSize(window, &width, &height);
     
     // Set the size of screen to the mainCamera
-    mainCamera.SetScreenSize(width, height);
+    // mainCamera.SetScreenSize(width, height);
 
     // Set gl view port
-    glViewport(0, 0, width, height);
+    // glViewport(0, 0, width, height);
 
     /* Clear screen with a color... */
     glClearColor(0, 0, 0, 0);

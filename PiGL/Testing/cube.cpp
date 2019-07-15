@@ -24,8 +24,10 @@ Cube::~Cube()
 { /* ... */ }
 
 void Cube::OnBeforeInit() {
+
     /* Compile shader */
     shader.Compile();
+
 }
 
 void Cube::OnInit() {
