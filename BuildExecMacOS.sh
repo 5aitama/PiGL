@@ -2,4 +2,4 @@
 # git pull
 
 # Compile and run
-make PLATFORM=MACOS
+make run PLATFORM=MACOS

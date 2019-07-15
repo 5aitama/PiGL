@@ -2,4 +2,4 @@
 # git pull
 
 # Compile and run
-make PLATFORM=RASPI
+make run PLATFORM=RASPI
