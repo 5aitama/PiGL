@@ -18,13 +18,13 @@ public:
     const glm::quat QuatFromEuleurAngles(const glm::vec3& euleurAngles);
 
     // Return the position
-    const glm::vec3& GetPosition();
+    const glm::vec3& GetPosition() const;
     // Return the euleurAngles
-    const glm::vec3& GetEuleurAngles();
+    const glm::vec3& GetEuleurAngles() const;
     // Return the scale
-    const glm::vec3& GetScale();
+    const glm::vec3& GetScale() const;
     // Return the quaternion
-    const glm::quat& GetQuaternion();
+    const glm::quat& GetQuaternion() const;
 
     // Return the model matrix
     glm::mat4 GetMatrix() const;

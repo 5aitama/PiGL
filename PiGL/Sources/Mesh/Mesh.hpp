@@ -1,6 +1,10 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
+#ifndef GLM_FORCE_LEFT_HANDED
+#define GLM_FORCE_LEFT_HANDED
+#endif
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 

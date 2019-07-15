@@ -157,21 +157,46 @@ void Mesh::BuildMesh()
     
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+    shader.Use();
+    shader.SetInt("material.diffuse", 0);
+    shader.SetInt("material.specular", 1);
+    shader.Unuse();
 }
 
 void Mesh::DrawMesh(const Camera& camera) const
 {
-    glUseProgram(shader.GetProgramID());
-        glBindVertexArray(vao);
-    
-            /* Send MVP matrices */
-            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "M"), 1, GL_FALSE, glm::value_ptr(GetMatrix()));
-            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "V"), 1, GL_FALSE, glm::value_ptr(camera.GetMatrix()));
-            glUniformMatrix4fv(glGetUniformLocation(shader.GetProgramID(), "P"), 1, GL_FALSE, glm::value_ptr(camera.GetProjectionMatrix()));
-    
-            /* Draw the mesh */
-            glDrawElements(GL_TRIANGLES, triangles_length, GL_UNSIGNED_SHORT, BUFFER_OFFSET(0));
-    
-        glBindVertexArray(0);
-    glUseProgram(0);
+    // Use the shader
+    shader.Use();
+
+    shader.SetVec3("light.direction", glm::vec3(1.0f, 0.0f, -1.0f));
+    shader.SetVec3("viewPos", camera.GetPosition());
+
+    // light properties
+    shader.SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+    shader.SetVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+    shader.SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+    // material properties
+    shader.SetFloat("material.shininess", 50.0f);
+    shader.SetVec3("material.diffuse", glm::vec3(1.0f));
+    shader.SetVec3("material.specular", glm::vec3(1.0f));
+
+    shader.SetMat4("M", glm::mat4(1.0f));
+
+    // Lock vao
+    glBindVertexArray(vao);
+
+    /* Send MVP matrices */
+    shader.SetMat4("M", GetMatrix());
+    shader.SetMat4("V", camera.GetMatrix());
+    shader.SetMat4("P", camera.GetProjectionMatrix());
+
+    /* Draw the mesh */
+    glDrawElements(GL_TRIANGLES, triangles_length, GL_UNSIGNED_SHORT, BUFFER_OFFSET(0));
+
+    // Unlock vao
+    glBindVertexArray(0);
+
+    shader.Unuse();
 }

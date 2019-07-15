@@ -51,14 +51,17 @@ void Scene::OnBeforeRenderGameObjects()
 void Scene::OnUpdate(const double& deltaTime) 
 { 
     // Do anything here...
-    if(meshes.find("MyMesh") != meshes.end()) {
-        meshes.at("MyMesh")->Rotate(glm::vec3(1.0f, 1.0f, 0.0f) * static_cast<float>(deltaTime));
+    for(int i = 0; i < 10; i++) {
+        std::string name = "cube" + std::to_string(i);
+        if(meshes.find(name) != meshes.end()) {
+            meshes.at(name)->Rotate(glm::vec3(i / 10.0f, 1.0f, 0.0f) * static_cast<float>(deltaTime));
+        }
     }
 }
 
 void Scene::OnRenderGameObjects() 
 {
-    
+
     // Draw all mesh
     for(auto it = meshes.begin(); it != meshes.end(); it++) 
     {

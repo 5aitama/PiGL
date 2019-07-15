@@ -12,22 +12,22 @@ const glm::quat Transform::QuatFromEuleurAngles(const glm::vec3& euleurAngles) {
     return glm::quat((euleurAngles));
 }
 
-const glm::vec3& Transform::GetPosition() 
+const glm::vec3& Transform::GetPosition() const
 {
     return position;
 }
 
-const glm::vec3& Transform::GetEuleurAngles() 
+const glm::vec3& Transform::GetEuleurAngles() const
 {
     return euleurAngles;
 }
 
-const glm::vec3& Transform::GetScale() 
+const glm::vec3& Transform::GetScale() const
 {
     return scale;
 }
 
-const glm::quat& Transform::GetQuaternion() 
+const glm::quat& Transform::GetQuaternion() const
 {
     return quaternion;
 }
