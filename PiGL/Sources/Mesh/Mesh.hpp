@@ -62,11 +62,18 @@ public:
 
     // Build the mesh
     void BuildMesh();
+
+    // Before draw the mesh
+    virtual void BeforeDrawMesh(const Camera& camera) const;
+
     // Draw the mesh
     void DrawMesh(const Camera& camera) const;
 
     // Get the shader object of the mesh
     const Shader& GetShader() const;
+
+    // Assign shader
+    void SetShader(const Shader& shader);
 
 protected:
     GLuint vbo;

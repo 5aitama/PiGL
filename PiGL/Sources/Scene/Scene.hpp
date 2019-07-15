@@ -13,14 +13,16 @@
 #include "../Mesh/Mesh.hpp"
 #include "../Camera/Camera.hpp"
 #include "../WInfos/WInfos.hpp"
+#include "../GameObject/GameObject.hpp"
 
 class Scene {
 public:
     Scene(const WInfos& winfos, GLFWwindow* window);
-    ~Scene();
+    
+    virtual ~Scene();
 
-    /* Add a mesh into the scene. */
-    void AddMesh(Mesh* mesh, std::string name);
+    /* Add a gameObject */
+    void AddGameObject(IGameObject* gameObject, const std::string& name);
 
     /* 
         This method is called before render all meshes.
@@ -44,7 +46,7 @@ public:
     virtual void OnRenderGameObjects();
 
 private:
-    std::map<std::string, Mesh*> meshes;
+    std::map<std::string, IGameObject*> gameObjects;
     Camera mainCamera;
     GLFWwindow* window;
 };

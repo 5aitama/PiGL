@@ -41,6 +41,15 @@ public:
 
     glm::vec3 GetForward() const;
 
+    // Assign the position
+    void SetPosition    (const glm::vec3& position);
+    // Assign the euleur angles
+    void SetEuleurAngles(const glm::vec3& euleurAngles);
+    // Assign the scale
+    void SetScale       (const glm::vec3& scale);
+    // Assign the quaternion
+    void SetQuaternion  (const glm::quat& quaternion);
+
 private:
     // The position (in world) of the transform
     glm::vec3 position;

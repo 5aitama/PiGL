@@ -1,22 +1,24 @@
 #include "Scene.hpp"
 
 Scene::Scene(const WInfos& winfos, GLFWwindow* window) 
-    : meshes(), mainCamera(winfos.width, winfos.height, 45.0f, 0.1f, 100.0f), window(window)
+    : gameObjects(), mainCamera(winfos.width, winfos.height, 45.0f, 0.1f, 100.0f), window(window)
 {
     mainCamera.Translate(glm::vec3(0.0f, 0.0f, -5.0f));
     mainCamera.Rotate(glm::vec3(0, 0, 0));
 }
 
-Scene::~Scene()
-    { /* ... */ }
+Scene::~Scene() {
+    for(auto iterator = gameObjects.begin(); iterator != gameObjects.end(); iterator++) {
+        delete iterator->second;
+    }
+ }
 
-void Scene::AddMesh(Mesh* mesh, std::string name)
-{
-    if(meshes.find(name) == meshes.end()) 
-    {
-        meshes.insert(std::pair<std::string, Mesh*>(name, mesh));
+void Scene::AddGameObject(IGameObject* gameObject, const std::string& name) {
+    if(gameObjects.find(name) == gameObjects.end()) {
+        gameObject->OnInit();
+        gameObjects.insert(std::pair<std::string, IGameObject*>(name, gameObject));
     } else {
-        std::cout << "Mesh \"" << name << "\" already exist in the scene!" << std::endl;
+        std::cout << "GameObject \"" << name << "\" already exist in the scene!" << std::endl;
     }
 }
 
@@ -48,14 +50,10 @@ void Scene::OnBeforeRenderGameObjects()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Scene::OnUpdate(const double& deltaTime) 
+void Scene::OnUpdate(const double& deltaTime)
 { 
-    // Do anything here...
-    for(int i = 0; i < 10; i++) {
-        std::string name = "cube" + std::to_string(i);
-        if(meshes.find(name) != meshes.end()) {
-            meshes.at(name)->Rotate(glm::vec3(i / 10.0f, 1.0f, 0.0f) * static_cast<float>(deltaTime));
-        }
+    for(auto iterator = gameObjects.begin(); iterator != gameObjects.end(); iterator++) {
+        iterator->second->OnUpdate(deltaTime);
     }
 }
 
@@ -63,9 +61,9 @@ void Scene::OnRenderGameObjects()
 {
 
     // Draw all mesh
-    for(auto it = meshes.begin(); it != meshes.end(); it++) 
-    {
-        it->second->DrawMesh(mainCamera);
+    for(auto iterator = gameObjects.begin(); iterator != gameObjects.end(); iterator++) {
+        iterator->second->BeforeDrawMesh(mainCamera);
+        iterator->second->DrawMesh(mainCamera);
     }
 
     /* Pool events */

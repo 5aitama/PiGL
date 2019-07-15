@@ -4,6 +4,9 @@ CC=g++
 EXEC=PiGL
 # Where is the main.cpp file
 ROOT=PiGL/Sources
+
+OTHER_SRC=PiGL
+
 # Folder where the build are
 BUILD_PATH=PiGL/Build
 
@@ -14,8 +17,12 @@ OBJECTS+= $(ROOT)/WInfos/WInfos.o
 OBJECTS+= $(ROOT)/Shader/Shader.o
 OBJECTS+= $(ROOT)/Mesh/Mesh.o
 OBJECTS+= $(ROOT)/Transform/Transform.o
+OBJECTS+= $(ROOT)/GameObject/GameObject.o
 OBJECTS+= $(ROOT)/Camera/Camera.o
 OBJECTS+= $(ROOT)/Scene/Scene.o
+
+OBJECTS+= $(OTHER_SRC)/Testing/cube.o
+
 OBJECTS+= $(ROOT)/main.o
 
 # Text colors for beautifull text!

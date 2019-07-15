@@ -9,7 +9,7 @@ Mesh::Mesh(const Shader& shader)
     { /* ... */ }
 
 Mesh::~Mesh() 
-{ 
+{
     if(glIsVertexArray(vao) == GL_TRUE) glDeleteVertexArrays(1, &vao);
     if(glIsBuffer(vbo) == GL_TRUE) glDeleteBuffers(1, &vbo);
     if(glIsBuffer(ebo) == GL_TRUE) glDeleteBuffers(1, &ebo);
@@ -17,7 +17,7 @@ Mesh::~Mesh()
 
 void Mesh::GenerateVBO() 
 {
-    std::cout << "Generate VBO..." << std::endl;
+    // std::cout << "Generate VBO..." << std::endl;
     if(glIsBuffer(vbo) == GL_TRUE) glDeleteBuffers(1, &vbo);
     glGenBuffers(1, &vbo);
 }
@@ -29,7 +29,7 @@ const GLuint& Mesh::GetVBO() const
 
 void Mesh::GenerateVAO() 
 {
-    std::cout << "Generate VAO..." << std::endl;
+    // std::cout << "Generate VAO..." << std::endl;
     if(glIsVertexArray(vao) == GL_TRUE) glDeleteVertexArrays(1, &vao);
     glGenVertexArrays(1, &vao);
 }
@@ -41,7 +41,7 @@ const GLuint& Mesh::GetVAO() const
 
 void Mesh::GenerateEBO() 
 {
-    std::cout << "Generate EBO..." << std::endl;
+    // std::cout << "Generate EBO..." << std::endl;
     if(glIsBuffer(ebo) == GL_TRUE) glDeleteBuffers(1, &ebo);
     glGenBuffers(1, &ebo);
 }
@@ -86,6 +86,14 @@ size_t Mesh::GetTrianglesLength() const
 const Shader& Mesh::GetShader() const
 {
     return shader;
+}
+
+void Mesh::SetShader(const Shader& shader) {
+    // Assign shader
+    this->shader = shader;
+    
+    // Rebuild the mesh
+    BuildMesh();
 }
 
 void Mesh::BuildMesh()
@@ -138,21 +146,23 @@ void Mesh::BuildMesh()
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
     
             glBufferData(GL_ARRAY_BUFFER, vbo_size , 0, GL_STATIC_DRAW);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, size_bytes, extracted_v);
-            glBufferSubData(GL_ARRAY_BUFFER, size_bytes, size_bytes, extracted_c);
-            glBufferSubData(GL_ARRAY_BUFFER, size_bytes + size_bytes, size_bytes, extracted_n);
+
+            glBufferSubData(GL_ARRAY_BUFFER, size_bytes * 0, size_bytes, extracted_v);
+            glBufferSubData(GL_ARRAY_BUFFER, size_bytes * 1, size_bytes, extracted_c);
+            glBufferSubData(GL_ARRAY_BUFFER, size_bytes * 2, size_bytes, extracted_n);
     
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, size_tris_bytes, 0, GL_STATIC_DRAW);
             glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size_tris_bytes, triangles);
     
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(size_bytes * 0));
             glEnableVertexAttribArray(0);
     
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(size_bytes));
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(size_bytes * 1));
             glEnableVertexAttribArray(1);
     
-            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(size_bytes + size_bytes));
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(size_bytes * 2));
             glEnableVertexAttribArray(2);
     
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -161,7 +171,22 @@ void Mesh::BuildMesh()
     shader.Use();
     shader.SetInt("material.diffuse", 0);
     shader.SetInt("material.specular", 1);
+
+    // light properties
+    shader.SetVec3("light.ambient", glm::vec3(0.05f, 0.05f, 0.05f));
+    shader.SetVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+    shader.SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+    // material properties
+    shader.SetFloat("material.shininess", 1.0f);
+    shader.SetVec3("material.diffuse", glm::vec3(0.0f, 0.0f, 1.0f));
+    shader.SetVec3("material.specular", glm::vec3(0.0f, 0.0f, 1.0f));
+
     shader.Unuse();
+}
+
+void Mesh::BeforeDrawMesh(const Camera& camera) const {
+    /* ... */
 }
 
 void Mesh::DrawMesh(const Camera& camera) const
@@ -170,17 +195,7 @@ void Mesh::DrawMesh(const Camera& camera) const
     shader.Use();
 
     shader.SetVec3("light.direction", glm::vec3(1.0f, 0.0f, -1.0f));
-    shader.SetVec3("viewPos", camera.GetPosition());
-
-    // light properties
-    shader.SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-    shader.SetVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-    shader.SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-
-    // material properties
-    shader.SetFloat("material.shininess", 50.0f);
-    shader.SetVec3("material.diffuse", glm::vec3(1.0f));
-    shader.SetVec3("material.specular", glm::vec3(1.0f));
+    shader.SetVec3("cameraPos", camera.GetPosition());
 
     shader.SetMat4("M", glm::mat4(1.0f));
 

@@ -80,3 +80,23 @@ glm::vec3 Transform::GetForward() const
 {
     return quaternion * glm::vec3(0.0f, 0.0f, 1.0f);
 }
+
+void Transform::SetPosition(const glm::vec3& position) {
+    this->position = position;
+    m_model = CalculateMatrix();
+}
+
+void Transform::SetEuleurAngles(const glm::vec3& euleurAngles) {
+    this->euleurAngles = euleurAngles;
+    m_model = CalculateMatrix();
+}
+
+void Transform::SetScale(const glm::vec3& scale) {
+    this->scale = scale;
+    m_model = CalculateMatrix();
+}
+
+void Transform::SetQuaternion(const glm::quat& quaternion) {
+    this->quaternion = quaternion;
+    m_model = CalculateMatrix();
+}

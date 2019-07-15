@@ -27,14 +27,14 @@ Shader::Shader(const std::string& vertSrc, const std::string& fragSrc) :
 { /* ... */ }
 
 Shader::Shader(const Shader& shader) 
-    : compiled(false),
-    programID(0),
-    v_shader(0),
-    f_shader(0),
+    : compiled(shader.compiled),
+    programID(shader.programID),
+    v_shader(shader.v_shader),
+    f_shader(shader.f_shader),
     vertSrc(shader.vertSrc),
     fragSrc(shader.fragSrc)
 { 
-    Compile(); 
+    
 }
 
 Shader::~Shader() {
