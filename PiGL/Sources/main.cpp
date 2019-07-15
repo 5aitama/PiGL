@@ -143,21 +143,6 @@ int main() {
         triangles[i + 4] = 2 + index;
         triangles[i + 5] = 3 + index;
     }
-
-
-    /* 
-    Mesh mesh;
-    mesh.SetVertices(vertices, 24);
-    mesh.SetTriangles(triangles, 36);
-    mesh.BuildMesh();
-
-    Mesh otherCube;
-    otherCube.SetVertices(vertices, 24);
-    otherCube.SetTriangles(triangles, 36);
-    otherCube.BuildMesh();
-
-    otherCube.Translate(glm::vec3(0.0f, 2.0f, 0.0f));
-    */
     /*
      *  Delta time part
      */
@@ -171,15 +156,14 @@ int main() {
 
     Scene scene(winfos, window);
 
-    // scene.AddMesh(&mesh, "cube1");
-    // scene.AddMesh(&otherCube, "cube2");
-
     Mesh* meshes = new Mesh[10];
+
     for(int i = 0; i < 10; i++) {
         meshes[i].SetVertices(vertices, 24);
         meshes[i].SetTriangles(triangles, 36);
         meshes[i].BuildMesh();
         meshes[i].Translate(glm::vec3((-5.0f + i) * 1.8f, 0.0f, 5.0f));
+        
         scene.AddMesh(&meshes[i], "cube" + std::to_string(i));
     }
     
