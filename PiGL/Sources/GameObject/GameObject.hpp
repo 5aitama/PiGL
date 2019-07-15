@@ -9,6 +9,12 @@ public:
     IGameObject();
     virtual ~IGameObject();
 
+    // This method is called before
+    // the gameObject Init() method
+    // It designed to compile shader
+    // and/or other stuff...
+    virtual void OnBeforeInit() = 0;
+
     // This metod was called after when
     // the gameObject is created or instantied
     virtual void OnInit() = 0;

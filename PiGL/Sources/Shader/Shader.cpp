@@ -86,14 +86,22 @@ void Shader::Unuse() const {
 
 void Shader::Compile() {
 
+    if(compiled || glIsProgram(programID)) {
+        std::cout << "Shader is already compiled!" << std::endl;
+        compiled = true;
+        return;
+    }
+
+    std::cout << "Compile shader..." << std::endl;
+
     compiled = false;
 
     // Read our shaders into the appropriate buffers
-    std::string vertexSource = ReadFile(vertSrc);   // Get source code for vertex shader.
-    std::string fragmentSource = ReadFile(fragSrc); // Get source code for fragment shader.
+    const std::string vertexSource = ReadFile(vertSrc);   // Get source code for vertex shader.
+    const std::string fragmentSource = ReadFile(fragSrc); // Get source code for fragment shader.
 
     // Create an empty vertex shader handle
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    const GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
     // Send the vertex shader source code to GL
     // Note that std::string's .c_str is NULL character terminated.

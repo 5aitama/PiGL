@@ -14,7 +14,7 @@ const SVertex Cube::base_vertices[8] = {
     SVertex(glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3(0, 0, -1), glm::vec3(1, 1, 1)),
 };
 
-Cube::Cube(const int& i) 
+Cube::Cube(const int& i)
     : IGameObject(), i(i) 
 { 
 
@@ -22,6 +22,11 @@ Cube::Cube(const int& i)
 
 Cube::~Cube() 
 { /* ... */ }
+
+void Cube::OnBeforeInit() {
+    /* Compile shader */
+    shader.Compile();
+}
 
 void Cube::OnInit() {
 
@@ -36,7 +41,7 @@ void Cube::OnInit() {
     };
 
     /* Normal for each faces of the cube */
-    glm::vec3 face_normals[6] = {
+    const glm::vec3 face_normals[6] = {
         glm::vec3( 0.0f,  0.0f, -1.0f),
         glm::vec3( 1.0f,  0.0f,  0.0f),
         glm::vec3( 0.0f,  0.0f,  1.0f),
@@ -53,7 +58,7 @@ void Cube::OnInit() {
 
     /* Calculate triangles of each face of the cube */
     for(unsigned short i = 0; i < 36; i += 6) {
-        unsigned short index = (i / 6) * 4;
+        const unsigned short index = (i / 6) * 4;
 
         triangles[i + 0] = 0 + index;
         triangles[i + 1] = 1 + index;
@@ -93,12 +98,15 @@ void Cube::BeforeDrawMesh(const Camera& camera) const {
     }
 
     shader.Use();
+
     shader.SetVec3("material.diffuse", color);
     shader.SetVec3("material.specular", color);
+    shader.SetFloat("material.shininess", i * 10);
+
     shader.Unuse();
 }
 
 void Cube::OnUpdate(const double& deltaTime) {
     // Rotate the cube :)
-    Rotate(glm::vec3(0.0f, (i + 1) / 10.0f, 0.0f) * static_cast<float>(deltaTime));
+    Rotate(glm::vec3(1.0f, 1.0f * cos(glm::radians(static_cast<float>(i * 2))), 0.0f) * static_cast<float>(deltaTime));
 }

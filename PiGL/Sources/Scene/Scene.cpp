@@ -15,6 +15,7 @@ Scene::~Scene() {
 
 void Scene::AddGameObject(IGameObject* gameObject, const std::string& name) {
     if(gameObjects.find(name) == gameObjects.end()) {
+        gameObject->OnBeforeInit();
         gameObject->OnInit();
         gameObjects.insert(std::pair<std::string, IGameObject*>(name, gameObject));
     } else {

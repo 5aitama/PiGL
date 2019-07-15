@@ -111,9 +111,9 @@ void Mesh::BuildMesh()
     }
 
     // Check if object need to initialize
-    GLboolean need_init_vbo = !glIsBuffer(GetVBO());
-    GLboolean need_init_ebo = !glIsBuffer(GetEBO());
-    GLboolean need_init_vao = !glIsVertexArray(GetVAO());
+    const GLboolean need_init_vbo = !glIsBuffer(GetVBO());
+    const GLboolean need_init_ebo = !glIsBuffer(GetEBO());
+    const GLboolean need_init_vao = !glIsVertexArray(GetVAO());
 
     // Generate object of they aren't generated...
     if(need_init_vbo) GenerateVBO();
@@ -134,13 +134,13 @@ void Mesh::BuildMesh()
     }
 
     // The size of each extracted array in bytes
-    size_t size_bytes = sizeof(glm::vec3) * vertices_length;
+    const size_t size_bytes = sizeof(glm::vec3) * vertices_length;
 
     // The vbo total size in bytes
-    size_t vbo_size = sizeof(SVertex) * vertices_length;
+    const size_t vbo_size = sizeof(SVertex) * vertices_length;
 
     // The size of triangles array in bytes
-    size_t size_tris_bytes = sizeof(unsigned short) * triangles_length;
+    const size_t size_tris_bytes = sizeof(unsigned short) * triangles_length;
 
     glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -174,11 +174,11 @@ void Mesh::BuildMesh()
 
     // light properties
     shader.SetVec3("light.ambient", glm::vec3(0.05f, 0.05f, 0.05f));
-    shader.SetVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+    shader.SetVec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
     shader.SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
     // material properties
-    shader.SetFloat("material.shininess", 1.0f);
+    // shader.SetFloat("material.shininess", 10.0f);
     shader.SetVec3("material.diffuse", glm::vec3(0.0f, 0.0f, 1.0f));
     shader.SetVec3("material.specular", glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -194,7 +194,7 @@ void Mesh::DrawMesh(const Camera& camera) const
     // Use the shader
     shader.Use();
 
-    shader.SetVec3("light.direction", glm::vec3(1.0f, 0.0f, -1.0f));
+    shader.SetVec3("light.direction", glm::vec3(0.0f, 0.0f, -1.0f));
     shader.SetVec3("cameraPos", camera.GetPosition());
 
     shader.SetMat4("M", glm::mat4(1.0f));

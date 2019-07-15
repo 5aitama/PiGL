@@ -8,6 +8,7 @@ public:
     Cube(const int& i);
    ~Cube();
 
+    void OnBeforeInit();
     void OnInit();
     void OnUpdate(const double& deltaTime);
     

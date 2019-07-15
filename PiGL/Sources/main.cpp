@@ -118,7 +118,7 @@ int main() {
         last_time       = current_time;
         
         // For fps
-        total_delta += delta_time;
+        total_delta    += delta_time;
 
         // Write FPS in the console, and reset fps and total_delta.
         if(total_delta >= 1.0f) {
